@@ -13,10 +13,12 @@ export const getStripe = (config: any, event?: any) => {
         process.env.STRIPE_SECRET_KEY
 
     if (!stripeKey) {
+        const envName = event?.context?.cloudflare?.env?.CF_PAGES_BRANCH || 'unknown'
+        console.error(`[Stripe Error] Secret Key missing in ${envName} environment.`)
         if (event?.context?.cloudflare?.env) {
-            console.error('Cloudflare Env keys available:', Object.keys(event.context.cloudflare.env))
+            console.error('Available keys:', Object.keys(event.context.cloudflare.env))
         }
-        throw new Error('Stripe Secret Key is missing. Please set NUXT_STRIPE_SECRET_KEY in your environment.')
+        throw new Error(`Stripe Secret Key is missing in the ${envName} environment. Please ensure NUXT_STRIPE_SECRET_KEY is set and redeploy.`)
     }
 
     return new Stripe(stripeKey, {
