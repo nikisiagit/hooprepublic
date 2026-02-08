@@ -54,11 +54,11 @@ const center = ref<[number, number]>([51.5074, -0.1278]) // London center
 const getMarkerStyle = (courtId: string) => {
   const isActive = props.activeCourtId === courtId
   return {
-    radius: isActive ? 12 : 8,
-    color: isActive ? '#000000' : '#000000',
-    fillColor: isActive ? '#000000' : '#000000',
-    fillOpacity: isActive ? 1 : 0.6,
-    weight: isActive ? 3 : 1
+    radius: isActive ? 10 : 6,
+    color: '#000000',
+    fillColor: '#FFFFFF',
+    fillOpacity: 1,
+    weight: isActive ? 4 : 2
   }
 }
 
