@@ -9,6 +9,9 @@
           <p class="footer-tagline">
             Connecting basketball players across London.
           </p>
+          <div class="footer-links">
+             <a href="https://sprout-4sz.pages.dev/space/hooprepublic" target="_blank" rel="noopener noreferrer" class="footer-link">Suggest an Idea</a>
+          </div>
         </div>
       </div>
 
@@ -57,7 +60,23 @@ const currentYear = new Date().getFullYear()
   color: var(--gray-400);
   line-height: 1.7;
   max-width: 400px;
-  margin: 0 auto;
+  margin: 0 auto var(--space-6);
+}
+
+.footer-links {
+  margin-top: var(--space-4);
+}
+
+.footer-link {
+  color: var(--gray-400);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: white;
+  text-decoration: underline;
 }
 
 .footer-bottom {
