@@ -203,8 +203,9 @@ onMounted(async () => {
       borough: c.borough || 'London',
       image_url: c.image_url
     }))
-  } catch (e) {
+  } catch (e: any) {
     console.error('Failed to load courts', e)
+    error.value = `Failed to load courts: ${e.message || e}`
   } finally {
     loadingCourts.value = false
   }

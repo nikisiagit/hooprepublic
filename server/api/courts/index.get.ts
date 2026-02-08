@@ -1,14 +1,16 @@
 // API endpoint to fetch courts with tags, images, and reviews
 export default defineEventHandler(async (event) => {
-    const query = getQuery(event)
-    const status = query.status as string || 'approved'
+  const query = getQuery(event)
+  const status = query.status as string || 'approved'
 
-    try {
-        const db = event.context.cloudflare?.env?.DB
+  try {
+    const db = event.context.cloudflare?.env?.DB
 
-        if (db) {
-            // Fetch courts with aggregated data
-            const { results: courts } = await db.prepare(`
+    if (db) {
+      // Fetch courts with aggregated data
+
+      // Fetch courts with aggregated data
+      const { results: courts } = await db.prepare(`
         SELECT 
           c.id,
           c.name,
@@ -34,18 +36,18 @@ export default defineEventHandler(async (event) => {
         ORDER BY c.name ASC
       `).bind(status).all()
 
-            // For each court, fetch tags and primary image
-            const enrichedCourts = await Promise.all(courts.map(async (court: any) => {
-                // Get tags
-                const { results: tags } = await db.prepare(`
+      // For each court, fetch tags and primary image
+      const enrichedCourts = await Promise.all(courts.map(async (court: any) => {
+        // Get tags
+        const { results: tags } = await db.prepare(`
           SELECT t.id, t.name, t.category, t.icon
           FROM tags t
           JOIN court_tags ct ON t.id = ct.tag_id
           WHERE ct.court_id = ?
         `).bind(court.id).all()
 
-                // Get primary image
-                const { results: images } = await db.prepare(`
+        // Get primary image
+        const { results: images } = await db.prepare(`
           SELECT url, alt_text
           FROM court_images
           WHERE court_id = ?
@@ -53,21 +55,21 @@ export default defineEventHandler(async (event) => {
           LIMIT 1
         `).bind(court.id).all()
 
-                return {
-                    ...court,
-                    tags,
-                    image_url: images[0]?.url || null,
-                    avg_rating: court.avg_rating ? Math.round(court.avg_rating * 10) / 10 : null
-                }
-            }))
-
-            return enrichedCourts
+        return {
+          ...court,
+          tags,
+          image_url: images[0]?.url || null,
+          avg_rating: court.avg_rating ? Math.round(court.avg_rating * 10) / 10 : null
         }
+      }))
 
-        // No database connection - return empty array
-        return []
-    } catch (error) {
-        console.error('Error fetching courts:', error)
-        return []
+      return enrichedCourts
     }
+
+    // No database connection - return empty array
+    return []
+  } catch (error) {
+    console.error('Error fetching courts:', error)
+    return []
+  }
 })

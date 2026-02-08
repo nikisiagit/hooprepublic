@@ -76,6 +76,11 @@
             </div>
           </div>
 
+          <!-- Error State -->
+          <div v-if="errorMsg" class="error-message">
+            <p>{{ errorMsg }}</p>
+          </div>
+
           <!-- Empty State -->
           <div v-else-if="courts.length === 0" class="empty-state">
             <div class="empty-state-icon">
@@ -208,6 +213,7 @@ const loading = ref(false)
 const isMapView = ref(false)
 const hoveredCourtId = ref<string | null>(null)
 const courts = ref<Court[]>([])
+const errorMsg = ref('')
 
 const filters = reactive({
   type: '',
@@ -262,6 +268,7 @@ const fetchCourts = async () => {
   } catch (error) {
     console.error('Failed to fetch courts:', error)
     courts.value = []
+    errorMsg.value = `Failed to fetch courts: ${error}`
   } finally {
     loading.value = false
   }
