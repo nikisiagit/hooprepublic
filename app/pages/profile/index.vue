@@ -18,9 +18,17 @@
             </span>
           </div>
         </div>
-        <NuxtLink to="/profile/edit" class="btn-edit">
-          ✏️ Edit Profile
-        </NuxtLink>
+        <div class="profile-actions">
+           <button @click="connectStripe" class="btn-stripe" :disabled="stripeLoading">
+              <span v-if="stripeLoading">Loading...</span>
+              <span v-else>
+                 {{ profile?.stripe_charges_enabled ? '✅ Payouts Active' : '🏦 Connect Bank for Payouts' }}
+              </span>
+           </button>
+           <NuxtLink to="/profile/edit" class="btn-edit">
+            ✏️ Edit Profile
+           </NuxtLink>
+        </div>
       </div>
 
       <div class="profile-content">
@@ -99,9 +107,33 @@ interface Profile {
   games_played?: number
   reviews_count?: number
   courts_suggested?: number
+  stripe_charges_enabled?: boolean
 }
 
 const { data: profile, pending, error } = await useFetch<Profile>('/api/profile')
+
+const stripeLoading = ref(false)
+
+const connectStripe = async () => {
+  if (profile.value?.stripe_charges_enabled) {
+     // Already connected - maybe show dashboard link or status
+     alert('Your bank account is connected for payouts.')
+     return
+  }
+
+  stripeLoading.value = true
+  try {
+    const { url } = await $fetch('/api/stripe/onboard', { method: 'POST' })
+    if (url) {
+       window.location.href = url
+    }
+  } catch (err: any) {
+    console.error('Failed to start Stripe onboarding:', err)
+    alert('Failed to connect to Stripe. Please try again.')
+  } finally {
+    stripeLoading.value = false
+  }
+}
 
 const initials = computed(() => {
   if (!profile.value) return '?'
@@ -366,6 +398,16 @@ const formatDate = (date: string | undefined) => {
     flex-direction: column;
     text-align: center;
   }
+  
+  .profile-actions {
+     flex-direction: column;
+     width: 100%;
+  }
+  
+  .btn-stripe, .btn-edit {
+     width: 100%;
+     justify-content: center;
+  }
 
   .profile-badges {
     justify-content: center;
@@ -375,5 +417,34 @@ const formatDate = (date: string | undefined) => {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
+</style>
+
+<style scoped>
+.profile-actions {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.btn-stripe {
+  padding: var(--space-2) var(--space-4);
+  background: #635bff; /* Stripe Blurple */
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-stripe:hover {
+  background: #4b45c6;
+}
+
+.btn-stripe:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

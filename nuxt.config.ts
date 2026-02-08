@@ -9,8 +9,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    stripeSecretKey: process.env.NUXT_STRIPE_SECRET_KEY,
+    stripeWebhookSecret: process.env.NUXT_STRIPE_WEBHOOK_SECRET,
     public: {
       googleClientId: process.env.GOOGLE_CLIENT_ID || '', // Provide via environment variable
+      stripeKey: process.env.NUXT_STRIPE_PUBLIC_KEY,
     }
   },
 

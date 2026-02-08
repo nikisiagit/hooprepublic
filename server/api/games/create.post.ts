@@ -2,7 +2,7 @@ import { defineEventHandler, readBody, createError } from 'h3'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const user = event.context.user
+    const user = await getUserFromEvent(event)
 
     if (!user) {
         throw createError({
