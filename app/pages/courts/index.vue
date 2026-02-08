@@ -95,9 +95,10 @@
 
           <!-- List View -->
           <div v-else class="courts-list">
-            <div 
+            <NuxtLink 
               v-for="court in filteredCourts" 
               :key="court.id" 
+              :to="`/courts/${court.id}`"
               class="court-card card"
               @mouseenter="hoveredCourtId = court.id"
               @mouseleave="hoveredCourtId = null"
@@ -142,17 +143,12 @@
                     <span class="price">Free</span>
                     <span class="subtext">Public Access</span>
                   </div>
-                  <div class="court-actions">
-                    <NuxtLink :to="`/courts/${court.id}`" class="btn btn-secondary btn-sm">
-                      Details
-                    </NuxtLink>
-                    <button class="btn btn-primary btn-sm">
-                      Book
-                    </button>
+                  <div v-if="(court.upcoming_game_dates_count || 0) > 0" class="game-availability">
+                    Available games on {{ court.upcoming_game_dates_count }} dates
                   </div>
                 </div>
               </div>
-            </div>
+            </NuxtLink>
           </div>
         </div>
 
@@ -204,6 +200,7 @@ interface Court {
   tags?: Tag[]
   avg_rating?: number
   review_count?: number
+  upcoming_game_dates_count?: number
 }
 
 const searchQuery = ref('')
@@ -341,6 +338,8 @@ onMounted(() => {
   background: white;
   transition: all var(--transition-base);
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .court-card.is-hovered {
@@ -427,10 +426,16 @@ onMounted(() => {
   color: var(--gray-500);
 }
 
-.court-actions {
-  display: flex;
-  gap: var(--space-2);
-  margin-left: auto;
+.game-availability {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--black);
+  padding: var(--space-1) var(--space-3);
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  text-align: right;
+  max-width: 50%;
+  line-height: 1.3;
 }
 
 /* Mobile Floating Toggle */

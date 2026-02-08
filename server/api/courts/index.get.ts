@@ -21,7 +21,14 @@ export default defineEventHandler(async (event) => {
           c.status,
           c.created_at,
           (SELECT AVG(rating) FROM reviews r WHERE r.court_id = c.id) as avg_rating,
-          (SELECT COUNT(*) FROM reviews r WHERE r.court_id = c.id) as review_count
+          (SELECT COUNT(*) FROM reviews r WHERE r.court_id = c.id) as review_count,
+          (
+            SELECT COUNT(DISTINCT booking_date) 
+            FROM bookings b 
+            WHERE b.court_id = c.id 
+            AND b.is_public = 1 
+            AND b.booking_date >= date('now')
+          ) as upcoming_game_dates_count
         FROM courts c
         WHERE c.status = ?
         ORDER BY c.name ASC
