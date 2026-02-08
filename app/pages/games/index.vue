@@ -1,0 +1,482 @@
+<template>
+  <div class="games-page">
+    <section class="page-header">
+      <div class="container">
+        <h1>Open Games</h1>
+        <p>Join pickup games and meet other players</p>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+      <div class="container">
+        <div class="filters-bar glass">
+          <div class="date-filters">
+            <button 
+              v-for="day in upcomingDays" 
+              :key="day.value"
+              class="date-btn"
+              :class="{ active: selectedDate === day.value }"
+              @click="selectedDate = day.value"
+            >
+              <span class="date-day">{{ day.label }}</span>
+              <span class="date-date">{{ day.date }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Games List -->
+    <section class="games-section">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="loading" class="games-list">
+          <div v-for="i in 4" :key="i" class="game-card-skeleton">
+            <div class="skeleton skeleton-time"></div>
+            <div class="skeleton-content">
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-text"></div>
+            </div>
+            <div class="skeleton skeleton-players"></div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="games.length === 0" class="empty-state">
+          <div class="empty-state-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="empty-state-title">No open games yet</h3>
+          <p class="empty-state-text">
+            Be the first to create an open game! Book a court and invite others to join.
+          </p>
+          <NuxtLink to="/courts" class="btn btn-primary" style="margin-top: var(--space-6)">
+            Book a Court
+          </NuxtLink>
+        </div>
+
+        <!-- Games List -->
+        <div v-else class="games-list">
+          <div 
+            v-for="game in filteredGames" 
+            :key="game.id" 
+            class="game-card card"
+          >
+            <div class="game-time">
+              <span class="time">{{ formatTime(game.start_time) }}</span>
+              <span class="duration">{{ getDuration(game.start_time, game.end_time) }}</span>
+            </div>
+
+            <div class="game-info">
+              <h3>{{ game.court_name }}</h3>
+              <p class="game-location">{{ game.court_address }}</p>
+              
+              <div class="game-host">
+                <div class="host-avatar">
+                  {{ getInitials(game.host_name) }}
+                </div>
+                <span>Hosted by <strong>{{ game.host_name }}</strong></span>
+              </div>
+            </div>
+
+            <div class="game-players">
+              <div class="players-count">
+                <span class="current">{{ game.current_players }}</span>
+                <span class="separator">/</span>
+                <span class="max">{{ game.max_players }}</span>
+              </div>
+              <span class="players-label">Players</span>
+              
+              <div class="spots-indicator">
+                <div 
+                  class="spots-fill" 
+                  :style="{ width: `${(game.current_players / game.max_players) * 100}%` }"
+                ></div>
+              </div>
+            </div>
+
+            <div class="game-actions">
+              <button 
+                class="btn btn-primary"
+                :disabled="game.current_players >= game.max_players"
+              >
+                {{ game.current_players >= game.max_players ? 'Full' : 'Join Game' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script setup lang="ts">
+interface Game {
+  id: string
+  booking_date: string
+  start_time: string
+  end_time: string
+  court_name: string
+  court_address: string
+  host_name: string
+  current_players: number
+  max_players: number
+}
+
+const loading = ref(false)
+const games = ref<Game[]>([])
+const selectedDate = ref('')
+
+// Generate upcoming days
+const upcomingDays = computed(() => {
+  const days = []
+  const today = new Date()
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today)
+    date.setDate(today.getDate() + i)
+    
+    const value = date.toISOString().split('T')[0]
+    const label = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : dayNames[date.getDay()]
+    const dateStr = date.getDate().toString()
+    
+    days.push({ value, label, date: dateStr })
+  }
+  
+  return days
+})
+
+// Set default selected date
+onMounted(() => {
+  selectedDate.value = upcomingDays.value[0].value
+  fetchGames()
+})
+
+const filteredGames = computed(() => {
+  if (!selectedDate.value) return games.value
+  return games.value.filter(game => game.booking_date === selectedDate.value)
+})
+
+const fetchGames = async () => {
+  loading.value = true
+  try {
+    const response = await $fetch<Game[]>('/api/games')
+    games.value = response
+  } catch (error) {
+    console.error('Failed to fetch games:', error)
+    games.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+const formatTime = (time: string) => {
+  const [hours, minutes] = time.split(':')
+  const hour = parseInt(hours)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const displayHour = hour % 12 || 12
+  return `${displayHour}:${minutes} ${ampm}`
+}
+
+const getDuration = (start: string, end: string) => {
+  const [startHours, startMinutes] = start.split(':').map(Number)
+  const [endHours, endMinutes] = end.split(':').map(Number)
+  
+  const startTotal = startHours * 60 + startMinutes
+  const endTotal = endHours * 60 + endMinutes
+  const diff = endTotal - startTotal
+  
+  const hours = Math.floor(diff / 60)
+  const minutes = diff % 60
+  
+  if (minutes === 0) return `${hours}h`
+  return `${hours}h ${minutes}m`
+}
+
+const getInitials = (name: string) => {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase()
+}
+</script>
+
+<style scoped>
+.games-page {
+  padding-top: 80px;
+}
+
+.page-header {
+  padding: var(--space-16) 0 var(--space-12);
+  background: linear-gradient(135deg, var(--accent-50), white);
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-2);
+}
+
+.page-header p {
+  font-size: 1.125rem;
+  color: var(--gray-500);
+}
+
+/* Filters */
+.filters-section {
+  padding: var(--space-6) 0;
+  position: sticky;
+  top: 72px;
+  z-index: 50;
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.filters-bar {
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+}
+
+.date-filters {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.date-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.date-btn:hover {
+  border-color: var(--primary-300);
+}
+
+.date-btn.active {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: white;
+}
+
+.date-day {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.date-date {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Games List */
+.games-section {
+  padding: var(--space-8) 0 var(--space-16);
+}
+
+.games-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.game-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-5);
+}
+
+.game-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--primary-50);
+  border-radius: var(--radius-lg);
+  min-width: 80px;
+}
+
+.game-time .time {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-700);
+}
+
+.game-time .duration {
+  font-size: 0.75rem;
+  color: var(--primary-500);
+}
+
+.game-info h3 {
+  font-size: 1.125rem;
+  margin-bottom: var(--space-1);
+}
+
+.game-location {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-bottom: var(--space-3);
+}
+
+.game-host {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.host-avatar {
+  width: 28px;
+  height: 28px;
+  background: var(--accent-100);
+  color: var(--accent-700);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 600;
+}
+
+.game-players {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.players-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.players-count .current {
+  color: var(--primary-600);
+}
+
+.players-count .separator,
+.players-count .max {
+  color: var(--gray-400);
+}
+
+.players-label {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spots-indicator {
+  width: 60px;
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.spots-fill {
+  height: 100%;
+  background: var(--primary-500);
+  border-radius: 2px;
+  transition: width var(--transition-base);
+}
+
+.game-actions .btn {
+  white-space: nowrap;
+}
+
+.game-actions .btn:disabled {
+  background: var(--gray-200);
+  color: var(--gray-500);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Skeleton */
+.game-card-skeleton {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px 100px;
+  gap: var(--space-6);
+  align-items: center;
+  padding: var(--space-5);
+  background: white;
+  border-radius: var(--radius-xl);
+}
+
+.skeleton-time {
+  height: 60px;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+}
+
+.skeleton-text {
+  height: 16px;
+  width: 40%;
+}
+
+.skeleton-players {
+  height: 50px;
+  border-radius: var(--radius-lg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .game-time {
+    flex-direction: row;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  .game-players {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .game-actions {
+    width: 100%;
+  }
+
+  .game-actions .btn {
+    width: 100%;
+  }
+
+  .game-card-skeleton {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

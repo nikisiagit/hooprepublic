@@ -1,0 +1,29 @@
+{
+  "name": "hooprepublic",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deploy": "npm run build && npx wrangler pages deploy .output/public",
+    "db:create": "npx wrangler d1 create hooprepublic-db",
+    "db:migrate": "npx wrangler d1 execute hooprepublic-db --file=./db/schema.sql",
+    "db:migrate:local": "npx wrangler d1 execute hooprepublic-db --local --file=./db/schema.sql",
+    "db:seed:generate": "npx tsx db/seed.ts > db/seed.sql",
+    "db:seed": "npm run db:seed:generate && npx wrangler d1 execute hooprepublic-db --file=./db/seed.sql",
+    "db:seed:local": "npm run db:seed:generate && npx wrangler d1 execute hooprepublic-db --local --file=./db/seed.sql"
+  },
+  "dependencies": {
+    "nanoid": "^5.1.6",
+    "nuxt": "^4.3.1",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "wrangler": "^4.63.0"
+  }
+}
