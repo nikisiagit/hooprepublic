@@ -226,17 +226,19 @@ onMounted(() => {
 
 .page-header {
   padding: var(--space-16) 0 var(--space-12);
-  background: linear-gradient(135deg, var(--primary-50), white);
+  background: var(--white);
   text-align: center;
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: var(--space-2);
+  letter-spacing: -0.02em;
 }
 
 .page-header p {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--gray-500);
 }
 
@@ -246,14 +248,17 @@ onMounted(() => {
   position: sticky;
   top: 72px;
   z-index: 50;
-  background: rgba(250, 250, 250, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .filters-bar {
   display: flex;
   gap: var(--space-4);
   padding: var(--space-4);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-xl);
 }
 
@@ -264,8 +269,13 @@ onMounted(() => {
   gap: var(--space-3);
   padding: 0 var(--space-4);
   background: white;
-  border: 1px solid var(--gray-200);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.search-input-wrapper:focus-within {
+  border-color: var(--black);
 }
 
 .search-input-wrapper svg {
@@ -292,21 +302,22 @@ onMounted(() => {
 
 .filter-select {
   padding: var(--space-3) var(--space-4);
-  padding-right: var(--space-8);
+  padding-right: var(--space-10);
   background: white;
-  border: 1px solid var(--gray-200);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23171717' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
+  transition: all var(--transition-fast);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: var(--primary-500);
+  border-color: var(--black);
 }
 
 /* Courts Grid */
@@ -317,18 +328,26 @@ onMounted(() => {
 .courts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: var(--space-6);
+  gap: var(--space-8);
 }
 
 .court-card {
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--gray-200);
+  height: 100%;
+}
+
+.court-card:hover {
+  border-color: var(--black);
+  transform: translateY(-4px);
 }
 
 .court-image {
   position: relative;
-  height: 200px;
+  height: 240px;
   overflow: hidden;
+  background: var(--gray-100);
 }
 
 .court-image img {
@@ -344,18 +363,19 @@ onMounted(() => {
 
 .court-type-badge {
   position: absolute;
-  top: var(--space-3);
-  left: var(--space-3);
+  top: var(--space-4);
+  left: var(--space-4);
   padding: var(--space-1) var(--space-3);
-  background: white;
+  background: var(--black);
+  color: var(--white);
   border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 600;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .court-content {
-  padding: var(--space-5);
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -370,13 +390,18 @@ onMounted(() => {
 }
 
 .court-header h3 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   margin-bottom: var(--space-1);
 }
 
 .court-location {
   font-size: 0.875rem;
-  color: var(--gray-500);
+  color: var(--gray-600);
+}
+
+.court-rating {
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .court-price {
@@ -387,12 +412,12 @@ onMounted(() => {
 .court-price .price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--primary-600);
+  color: var(--black);
 }
 
 .court-price .per-hour {
   font-size: 0.875rem;
-  color: var(--gray-400);
+  color: var(--gray-500);
 }
 
 .court-features {
@@ -403,16 +428,19 @@ onMounted(() => {
 
 .feature {
   padding: var(--space-1) var(--space-3);
-  background: var(--gray-100);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-full);
   font-size: 0.75rem;
-  color: var(--gray-600);
+  color: var(--gray-700);
 }
 
 .court-actions {
   display: flex;
   gap: var(--space-3);
   margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--gray-100);
 }
 
 .court-actions .btn {
@@ -424,10 +452,11 @@ onMounted(() => {
   background: white;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  border: 1px solid var(--gray-200);
 }
 
 .court-image-skeleton {
-  height: 200px;
+  height: 240px;
 }
 
 .skeleton-content {
@@ -452,8 +481,44 @@ onMounted(() => {
   width: 100%;
 }
 
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  background: var(--gray-50);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--gray-200);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--space-6);
+  color: var(--gray-400);
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-text {
+  color: var(--gray-500);
+  max-width: 400px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2.25rem;
+  }
+
   .filters-bar {
     flex-direction: column;
   }

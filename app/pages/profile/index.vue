@@ -184,7 +184,7 @@ const formatDate = (date: string | undefined) => {
   padding: var(--space-8);
   background: white;
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
   margin-bottom: var(--space-8);
 }
 
@@ -193,7 +193,7 @@ const formatDate = (date: string | undefined) => {
   height: 120px;
   border-radius: var(--radius-full);
   overflow: hidden;
-  background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+  background: var(--black);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,8 +218,8 @@ const formatDate = (date: string | undefined) => {
 
 .profile-info h1 {
   font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--gray-900);
+  font-weight: 800;
+  color: var(--black);
   margin-bottom: var(--space-1);
 }
 
@@ -239,12 +239,12 @@ const formatDate = (date: string | undefined) => {
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-full);
   font-size: 0.813rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .badge-position {
-  background: var(--primary-100);
-  color: var(--primary-700);
+  background: var(--black);
+  color: var(--white);
 }
 
 .badge-skill {
@@ -254,17 +254,19 @@ const formatDate = (date: string | undefined) => {
 
 .btn-edit {
   padding: var(--space-2) var(--space-4);
-  background: var(--gray-100);
-  border-radius: var(--radius-lg);
-  color: var(--gray-700);
-  font-weight: 500;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  color: var(--black);
+  font-weight: 600;
   font-size: 0.875rem;
   text-decoration: none;
   transition: all var(--transition-fast);
 }
 
 .btn-edit:hover {
-  background: var(--gray-200);
+  background: var(--gray-50);
+  border-color: var(--black);
 }
 
 .profile-content {
@@ -276,13 +278,13 @@ const formatDate = (date: string | undefined) => {
   background: white;
   padding: var(--space-6);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
 }
 
 .profile-section h2 {
   font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--gray-900);
+  font-weight: 700;
+  color: var(--black);
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--gray-100);
@@ -303,11 +305,12 @@ const formatDate = (date: string | undefined) => {
 .detail-label {
   font-size: 0.813rem;
   color: var(--gray-500);
+  font-weight: 500;
 }
 
 .detail-value {
-  font-weight: 500;
-  color: var(--gray-900);
+  font-weight: 600;
+  color: var(--black);
 }
 
 .tags-list {
@@ -318,14 +321,15 @@ const formatDate = (date: string | undefined) => {
 
 .tag {
   padding: var(--space-2) var(--space-3);
-  background: var(--gray-100);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   color: var(--gray-700);
 }
 
 .empty-state {
-  color: var(--gray-500);
+  color: var(--gray-400);
   font-style: italic;
 }
 
@@ -338,21 +342,23 @@ const formatDate = (date: string | undefined) => {
 .stat-card {
   text-align: center;
   padding: var(--space-4);
-  background: var(--gray-50);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-lg);
 }
 
 .stat-value {
   display: block;
   font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary-600);
+  font-weight: 800;
+  color: var(--black);
   margin-bottom: var(--space-1);
 }
 
 .stat-label {
   font-size: 0.813rem;
   color: var(--gray-500);
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

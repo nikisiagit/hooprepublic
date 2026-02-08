@@ -2,8 +2,7 @@
   <header class="header glass">
     <div class="container header-content">
       <NuxtLink to="/" class="logo">
-        <span class="logo-icon">🏀</span>
-        <span class="logo-text">Hoop<span class="gradient-text">Republic</span></span>
+        <span class="logo-text">HoopRepublic</span>
       </NuxtLink>
 
       <nav class="nav">
@@ -162,17 +161,13 @@ const vClickOutside = {
 .logo {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.logo-icon {
-  font-size: 1.75rem;
 }
 
 .logo-text {
-  color: var(--gray-900);
+  font-size: 1.375rem;
+  font-weight: 900;
+  color: var(--black);
+  letter-spacing: -0.02em;
 }
 
 .nav {
@@ -183,17 +178,18 @@ const vClickOutside = {
 
 .nav-link {
   font-weight: 500;
-  color: var(--gray-600);
+  font-size: 0.9375rem;
+  color: var(--gray-500);
   transition: color var(--transition-fast);
   position: relative;
 }
 
 .nav-link:hover {
-  color: var(--primary-600);
+  color: var(--black);
 }
 
 .nav-link.router-link-active {
-  color: var(--primary-600);
+  color: var(--black);
 }
 
 .nav-link.router-link-active::after {

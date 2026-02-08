@@ -129,13 +129,19 @@ interface Game {
   max_players: number
 }
 
+interface Day {
+  value: string
+  label: string
+  date: string
+}
+
 const loading = ref(false)
 const games = ref<Game[]>([])
 const selectedDate = ref('')
 
 // Generate upcoming days
-const upcomingDays = computed(() => {
-  const days = []
+const upcomingDays = computed<Day[]>(() => {
+  const days: Day[] = []
   const today = new Date()
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   
@@ -143,7 +149,7 @@ const upcomingDays = computed(() => {
     const date = new Date(today)
     date.setDate(today.getDate() + i)
     
-    const value = date.toISOString().split('T')[0]
+    const value = date.toISOString().split('T')[0] || ''
     const label = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : dayNames[date.getDay()]
     const dateStr = date.getDate().toString()
     
@@ -155,7 +161,9 @@ const upcomingDays = computed(() => {
 
 // Set default selected date
 onMounted(() => {
-  selectedDate.value = upcomingDays.value[0].value
+  if (upcomingDays.value.length > 0) {
+    selectedDate.value = upcomingDays.value[0].value
+  }
   fetchGames()
 })
 
@@ -178,7 +186,12 @@ const fetchGames = async () => {
 }
 
 const formatTime = (time: string) => {
-  const [hours, minutes] = time.split(':')
+  if (!time) return ''
+  const parts = time.split(':')
+  if (parts.length < 2) return time
+  
+  const hours = parts[0]
+  const minutes = parts[1]
   const hour = parseInt(hours)
   const ampm = hour >= 12 ? 'PM' : 'AM'
   const displayHour = hour % 12 || 12
@@ -186,11 +199,23 @@ const formatTime = (time: string) => {
 }
 
 const getDuration = (start: string, end: string) => {
-  const [startHours, startMinutes] = start.split(':').map(Number)
-  const [endHours, endMinutes] = end.split(':').map(Number)
+  if (!start || !end) return ''
+  const startParts = start.split(':').map(Number)
+  const endParts = end.split(':').map(Number)
   
-  const startTotal = startHours * 60 + startMinutes
-  const endTotal = endHours * 60 + endMinutes
+  if (startParts.length < 2 || endParts.length < 2) return ''
+  
+  const [startHours, startMinutes] = startParts
+  const [endHours, endMinutes] = endParts
+  
+  // Safe access with fallback or just assertions if confident
+  const sH = startHours || 0
+  const sM = startMinutes || 0
+  const eH = endHours || 0
+  const eM = endMinutes || 0
+
+  const startTotal = sH * 60 + sM
+  const endTotal = eH * 60 + eM
   const diff = endTotal - startTotal
   
   const hours = Math.floor(diff / 60)
@@ -201,6 +226,7 @@ const getDuration = (start: string, end: string) => {
 }
 
 const getInitials = (name: string) => {
+  if (!name) return '?'
   return name.split(' ').map(n => n[0]).join('').toUpperCase()
 }
 </script>
@@ -212,17 +238,19 @@ const getInitials = (name: string) => {
 
 .page-header {
   padding: var(--space-16) 0 var(--space-12);
-  background: linear-gradient(135deg, var(--accent-50), white);
+  background: var(--white);
   text-align: center;
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: var(--space-2);
+  letter-spacing: -0.02em;
 }
 
 .page-header p {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--gray-500);
 }
 
@@ -232,13 +260,16 @@ const getInitials = (name: string) => {
   position: sticky;
   top: 72px;
   z-index: 50;
-  background: rgba(250, 250, 250, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .filters-bar {
   padding: var(--space-4);
   border-radius: var(--radius-xl);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
 }
 
 .date-filters {
@@ -253,26 +284,27 @@ const getInitials = (name: string) => {
   flex-direction: column;
   align-items: center;
   padding: var(--space-3) var(--space-5);
-  background: white;
-  border: 2px solid var(--gray-200);
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   transition: all var(--transition-fast);
   flex-shrink: 0;
+  min-width: 80px;
 }
 
 .date-btn:hover {
-  border-color: var(--primary-300);
+  border-color: var(--black);
 }
 
 .date-btn.active {
-  background: var(--primary-500);
-  border-color: var(--primary-500);
-  color: white;
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
 }
 
 .date-day {
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -301,6 +333,16 @@ const getInitials = (name: string) => {
   gap: var(--space-6);
   align-items: center;
   padding: var(--space-5);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast);
+}
+
+.game-card:hover {
+  border-color: var(--black);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .game-time {
@@ -308,20 +350,22 @@ const getInitials = (name: string) => {
   flex-direction: column;
   align-items: center;
   padding: var(--space-3) var(--space-4);
-  background: var(--primary-50);
+  background: var(--gray-50);
   border-radius: var(--radius-lg);
   min-width: 80px;
+  border: 1px solid var(--gray-200);
 }
 
 .game-time .time {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--primary-700);
+  color: var(--black);
 }
 
 .game-time .duration {
   font-size: 0.75rem;
-  color: var(--primary-500);
+  color: var(--gray-500);
+  margin-top: 2px;
 }
 
 .game-info h3 {
@@ -346,8 +390,8 @@ const getInitials = (name: string) => {
 .host-avatar {
   width: 28px;
   height: 28px;
-  background: var(--accent-100);
-  color: var(--accent-700);
+  background: var(--black);
+  color: var(--white);
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -369,7 +413,7 @@ const getInitials = (name: string) => {
 }
 
 .players-count .current {
-  color: var(--primary-600);
+  color: var(--black);
 }
 
 .players-count .separator,
@@ -394,7 +438,7 @@ const getInitials = (name: string) => {
 
 .spots-fill {
   height: 100%;
-  background: var(--primary-500);
+  background: var(--black);
   border-radius: 2px;
   transition: width var(--transition-base);
 }
@@ -420,11 +464,13 @@ const getInitials = (name: string) => {
   padding: var(--space-5);
   background: white;
   border-radius: var(--radius-xl);
+  border: 1px solid var(--gray-200);
 }
 
 .skeleton-time {
   height: 60px;
   border-radius: var(--radius-lg);
+  background: var(--gray-100);
 }
 
 .skeleton-content {
@@ -436,20 +482,27 @@ const getInitials = (name: string) => {
 .skeleton-title {
   height: 24px;
   width: 60%;
+  background: var(--gray-100);
 }
 
 .skeleton-text {
   height: 16px;
   width: 40%;
+  background: var(--gray-100);
 }
 
 .skeleton-players {
   height: 50px;
   border-radius: var(--radius-lg);
+  background: var(--gray-100);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2.25rem;
+  }
+
   .game-card {
     grid-template-columns: 1fr;
     gap: var(--space-4);
@@ -477,6 +530,7 @@ const getInitials = (name: string) => {
 
   .game-card-skeleton {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 }
 </style>

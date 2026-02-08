@@ -3,8 +3,7 @@
     <div class="auth-container">
       <div class="auth-header">
         <NuxtLink to="/" class="logo">
-          <span class="logo-icon">🏀</span>
-          <span class="logo-text">Hoop<span class="accent">Republic</span></span>
+          <span class="logo-text">HoopRepublic</span>
         </NuxtLink>
         <h1>Welcome back</h1>
         <p>Sign in to continue to HoopRepublic</p>
@@ -33,7 +32,7 @@
               required 
             />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
-              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              {{ showPassword ? 'Hide' : 'Show' }}
             </button>
           </div>
         </div>
@@ -63,7 +62,6 @@
 
     <div class="auth-visual">
       <div class="visual-content">
-        <div class="big-emoji">🏀</div>
         <h2>Ready to ball?</h2>
         <p>Find courts, join games, and connect with the London basketball community.</p>
       </div>
@@ -124,7 +122,7 @@ const handleSignin = async () => {
   flex-direction: column;
   justify-content: center;
   padding: var(--space-12);
-  max-width: 440px;
+  max-width: 480px;
   margin: 0 auto;
   width: 100%;
 }
@@ -136,40 +134,30 @@ const handleSignin = async () => {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
   font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: var(--space-6);
+  font-weight: 900;
+  margin-bottom: var(--space-8);
   text-decoration: none;
-  color: var(--gray-900);
-}
-
-.logo-icon {
-  font-size: 1.75rem;
-}
-
-.logo .accent {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--black);
+  letter-spacing: -0.02em;
 }
 
 .auth-header h1 {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--gray-900);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--black);
   margin-bottom: var(--space-2);
 }
 
 .auth-header p {
-  color: var(--gray-600);
+  color: var(--gray-500);
+  font-size: 1.125rem;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
 .form-group {
@@ -179,23 +167,24 @@ const handleSignin = async () => {
 }
 
 .form-group label {
-  font-weight: 500;
-  color: var(--gray-700);
+  font-weight: 600;
+  color: var(--gray-900);
   font-size: 0.875rem;
 }
 
 .form-group input {
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--gray-300);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   transition: all var(--transition-fast);
+  background: var(--gray-50);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-color: var(--black);
+  background: var(--white);
 }
 
 .password-input {
@@ -216,7 +205,8 @@ const handleSignin = async () => {
   border: none;
   cursor: pointer;
   font-size: 1.25rem;
-  opacity: 0.6;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
 }
 
 .toggle-password:hover {
@@ -241,13 +231,14 @@ const handleSignin = async () => {
 .checkbox-label input {
   width: 16px;
   height: 16px;
-  accent-color: var(--primary-500);
+  accent-color: var(--black);
 }
 
 .forgot-link {
-  color: var(--primary-600);
+  color: var(--black);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 .error-message {
@@ -256,6 +247,7 @@ const handleSignin = async () => {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .btn-primary {
@@ -264,19 +256,20 @@ const handleSignin = async () => {
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
+  margin-top: var(--space-2);
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: var(--gray-800);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
 }
 
 .btn-primary:disabled {
@@ -304,55 +297,40 @@ const handleSignin = async () => {
 }
 
 .auth-footer a {
-  color: var(--primary-600);
-  font-weight: 500;
+  color: var(--black);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 .auth-visual {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  background: var(--gray-50);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-12);
   position: relative;
   overflow: hidden;
-}
-
-.auth-visual::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  border-left: 1px solid var(--gray-200);
 }
 
 .visual-content {
   position: relative;
-  color: white;
   max-width: 400px;
   text-align: center;
 }
 
-.big-emoji {
-  font-size: 5rem;
-  margin-bottom: var(--space-4);
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
 .visual-content h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 3rem;
+  font-weight: 800;
   margin-bottom: var(--space-4);
+  color: var(--black);
+  line-height: 1.1;
 }
 
 .visual-content p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.125rem;
-  line-height: 1.7;
+  color: var(--gray-600);
+  font-size: 1.25rem;
+  line-height: 1.6;
 }
 
 @media (max-width: 1024px) {

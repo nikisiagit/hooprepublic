@@ -4,11 +4,10 @@
       <div class="footer-content">
         <div class="footer-brand">
           <div class="logo">
-            <span class="logo-icon">🏀</span>
-            <span class="logo-text">Hoop<span class="gradient-text">Republic</span></span>
+            <span class="logo-text">HoopRepublic</span>
           </div>
           <p class="footer-tagline">
-            Connecting basketball players across London. Find courts, book games, build your community.
+            Connecting basketball players across London.
           </p>
         </div>
       </div>
@@ -38,6 +37,7 @@ const currentYear = new Date().getFullYear()
   margin-bottom: var(--space-8);
 }
 
+
 .footer-brand .logo {
   display: inline-flex;
   align-items: center;
@@ -46,10 +46,7 @@ const currentYear = new Date().getFullYear()
   font-size: 1.5rem;
   font-weight: 800;
   margin-bottom: var(--space-4);
-}
-
-.footer-brand .logo-icon {
-  font-size: 1.75rem;
+  letter-spacing: -0.02em;
 }
 
 .footer-brand .logo-text {

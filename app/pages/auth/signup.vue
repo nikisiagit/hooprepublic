@@ -3,8 +3,7 @@
     <div class="auth-container">
       <div class="auth-header">
         <NuxtLink to="/" class="logo">
-          <span class="logo-icon">🏀</span>
-          <span class="logo-text">Hoop<span class="accent">Republic</span></span>
+          <span class="logo-text">HoopRepublic</span>
         </NuxtLink>
         <h1>Create your account</h1>
         <p>Join the London basketball community</p>
@@ -94,15 +93,21 @@
         <p>Connect with players, discover courts, and never miss a pickup game in London.</p>
         <div class="features">
           <div class="feature">
-            <span class="feature-icon">🏀</span>
+            <span class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </span>
             <span>Find courts near you</span>
           </div>
           <div class="feature">
-            <span class="feature-icon">👥</span>
+            <span class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
             <span>Join pickup games</span>
           </div>
           <div class="feature">
-            <span class="feature-icon">📍</span>
+            <span class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
             <span>Connect with players</span>
           </div>
         </div>
@@ -190,40 +195,30 @@ const handleSignup = async () => {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
   font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: var(--space-6);
+  font-weight: 900;
+  margin-bottom: var(--space-8);
   text-decoration: none;
-  color: var(--gray-900);
-}
-
-.logo-icon {
-  font-size: 1.75rem;
-}
-
-.logo .accent {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--black);
+  letter-spacing: -0.02em;
 }
 
 .auth-header h1 {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: var(--gray-900);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--black);
   margin-bottom: var(--space-2);
 }
 
 .auth-header p {
-  color: var(--gray-600);
+  color: var(--gray-500);
+  font-size: 1.125rem;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
 .form-row {
@@ -239,23 +234,24 @@ const handleSignup = async () => {
 }
 
 .form-group label {
-  font-weight: 500;
-  color: var(--gray-700);
+  font-weight: 600;
+  color: var(--gray-900);
   font-size: 0.875rem;
 }
 
 .form-group input {
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--gray-300);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   transition: all var(--transition-fast);
+  background: var(--gray-50);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-color: var(--black);
+  background: var(--white);
 }
 
 .password-input {
@@ -276,7 +272,8 @@ const handleSignup = async () => {
   border: none;
   cursor: pointer;
   font-size: 1.25rem;
-  opacity: 0.6;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
 }
 
 .toggle-password:hover {
@@ -294,6 +291,7 @@ const handleSignup = async () => {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .btn-primary {
@@ -302,19 +300,20 @@ const handleSignup = async () => {
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
+  margin-top: var(--space-2);
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: var(--gray-800);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
 }
 
 .btn-primary:disabled {
@@ -342,25 +341,19 @@ const handleSignup = async () => {
 }
 
 .auth-footer a {
-  color: var(--primary-600);
-  font-weight: 500;
+  color: var(--black);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 .auth-visual {
-  background: linear-gradient(135deg, var(--gray-900), var(--gray-800));
+  background: var(--black);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-12);
   position: relative;
   overflow: hidden;
-}
-
-.auth-visual::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .visual-content {
@@ -372,15 +365,16 @@ const handleSignup = async () => {
 
 .visual-content h2 {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: var(--space-4);
+  color: var(--white);
 }
 
 .visual-content p {
   color: var(--gray-400);
   font-size: 1.125rem;
   line-height: 1.7;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-10);
 }
 
 .features {
@@ -392,15 +386,23 @@ const handleSignup = async () => {
 .feature {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  background: rgba(255, 255, 255, 0.05);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(10px);
+  gap: var(--space-4);
+  background: var(--gray-900);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--gray-800);
+  text-align: left;
 }
 
 .feature-icon {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-800);
+  border-radius: var(--radius-full);
 }
 
 @media (max-width: 1024px) {

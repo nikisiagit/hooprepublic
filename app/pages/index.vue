@@ -1,12 +1,7 @@
 <template>
   <div class="home">
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-bg">
-        <div class="hero-gradient"></div>
-        <div class="hero-pattern"></div>
-      </div>
-      
+    <section class="hero illustration-bg">
       <div class="container hero-content">
         <div class="hero-text animate-fade-in">
           <span class="badge badge-primary">🏀 London's Basketball Community</span>
@@ -18,10 +13,6 @@
           
           <div class="hero-cta">
             <NuxtLink to="/courts" class="btn btn-primary btn-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
               Find Courts
             </NuxtLink>
             <NuxtLink to="/games" class="btn btn-secondary btn-lg">
@@ -30,30 +21,16 @@
           </div>
         </div>
 
-        <div class="hero-visual animate-fade-in" style="animation-delay: 0.2s">
-          <div class="hero-card glass">
-            <div class="hero-card-header">
-              <span class="badge badge-success">Available Now</span>
-              <span class="court-price">£12/hr</span>
-            </div>
-            <div class="hero-card-body">
-              <h3>Queen Elizabeth Olympic Park</h3>
-              <p>Stratford, E20</p>
-              <div class="court-tags">
-                <span class="tag">🏟️ Indoor</span>
-                <span class="tag">💡 Lit</span>
-                <span class="tag">🌟 Pro Court</span>
-              </div>
-            </div>
-          </div>
+        <div class="hero-visual animate-slide-in">
+          <!-- Geometric Abstract Illustration Placeholder -->
+          <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-illustration">
+            <circle cx="200" cy="200" r="150" stroke="#F5F5F5" stroke-width="40"/>
+            <path d="M200 50 C282.843 50 350 117.157 350 200" stroke="black" stroke-width="40" stroke-linecap="round"/>
+            <circle cx="200" cy="200" r="80" fill="#FAFAFA"/>
+            <path d="M160 200 L240 200" stroke="black" stroke-width="8" stroke-linecap="round"/>
+            <path d="M200 160 L200 240" stroke="black" stroke-width="8" stroke-linecap="round"/>
+          </svg>
         </div>
-      </div>
-
-      <div class="hero-scroll">
-        <span>Scroll to explore</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 5v14m-7-7l7 7 7-7"/>
-        </svg>
       </div>
     </section>
 
@@ -61,7 +38,7 @@
     <section class="features">
       <div class="container">
         <div class="section-header">
-          <h2>How It <span class="gradient-text">Works</span></h2>
+          <h2>How It Works</h2>
           <p>Get on the court in three simple steps</p>
         </div>
 
@@ -74,7 +51,7 @@
               </svg>
             </div>
             <h3>Find a Court</h3>
-            <p>Browse courts across London by location, type, and availability. Filter by indoor/outdoor, price, and amenities.</p>
+            <p>Browse courts across London by location, type, and availability. Filter by indoor/outdoor.</p>
           </div>
 
           <div class="feature-card">
@@ -87,7 +64,7 @@
               </svg>
             </div>
             <h3>Book Your Slot</h3>
-            <p>Choose your preferred time and book instantly. Pick whether to play privately or open it up for others to join.</p>
+            <p>Choose your preferred time and book instantly. Organize private runs or join public ones.</p>
           </div>
 
           <div class="feature-card">
@@ -100,7 +77,7 @@
               </svg>
             </div>
             <h3>Play Together</h3>
-            <p>Join open games, meet new players, and build your basketball community. From pickup to competitive 5v5.</p>
+            <p>Join open games, meet new players, and build your basketball community.</p>
           </div>
         </div>
       </div>
@@ -112,14 +89,11 @@
         <div class="cta-card">
           <div class="cta-content">
             <h2>Ready to Hit the Court?</h2>
-            <p>Join HoopRepublic today and connect with London's basketball community.</p>
+            <p>Join HoopRepublic today.</p>
             <div class="cta-actions">
-              <button class="btn btn-primary btn-lg">Create Free Account</button>
-              <NuxtLink to="/courts" class="btn btn-secondary btn-lg">Browse Courts</NuxtLink>
+              <NuxtLink to="/auth/signup" class="btn btn-secondary btn-lg">Create Free Account</NuxtLink>
+              <NuxtLink to="/courts" class="btn btn-outline-white btn-lg">Browse Courts</NuxtLink>
             </div>
-          </div>
-          <div class="cta-visual">
-            <span class="cta-emoji">🏀</span>
           </div>
         </div>
       </div>
@@ -133,177 +107,93 @@
 <style scoped>
 /* Hero Section */
 .hero {
-  position: relative;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   padding-top: 80px;
-  overflow: hidden;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.hero-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, 
-    var(--primary-50) 0%, 
-    white 40%, 
-    var(--accent-50) 100%
-  );
-}
-
-.hero-pattern {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(var(--gray-200) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.5;
+  background-color: var(--white);
 }
 
 .hero-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
+  grid-template-columns: 1.2fr 0.8fr;
   align-items: center;
+  gap: var(--space-8);
 }
 
 .hero-text {
-  max-width: 560px;
+  max-width: 600px;
 }
 
 .hero-text .badge {
   margin-bottom: var(--space-6);
+  background: var(--gray-100);
+  color: var(--black);
+  border: 1px solid var(--gray-200);
 }
 
 .hero-text h1 {
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: 4.5rem;
+  letter-spacing: -0.03em;
   margin-bottom: var(--space-6);
-  color: var(--gray-900);
 }
 
 .hero-description {
   font-size: 1.25rem;
   color: var(--gray-600);
-  line-height: 1.7;
-  margin-bottom: var(--space-8);
+  font-weight: 400;
+  max-width: 480px;
+  margin-bottom: var(--space-10);
 }
 
 .hero-cta {
   display: flex;
   gap: var(--space-4);
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .hero-visual {
   display: flex;
   justify-content: center;
-}
-
-.hero-card {
-  width: 340px;
-  padding: var(--space-6);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-xl);
-}
-
-.hero-card-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-4);
 }
 
-.court-price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-600);
-}
-
-.hero-card-body h3 {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-1);
-}
-
-.hero-card-body p {
-  color: var(--gray-500);
-  margin-bottom: var(--space-4);
-}
-
-.court-tags {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-1) var(--space-3);
-  font-size: 0.75rem;
-  background: var(--gray-100);
-  border-radius: var(--radius-full);
-  color: var(--gray-600);
-}
-
-.hero-scroll {
-  position: absolute;
-  bottom: var(--space-8);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--gray-400);
-  font-size: 0.875rem;
-  animation: bounce 2s infinite;
+.hero-illustration {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Features Section */
 .features {
   padding: var(--space-24) 0;
-  background: white;
+  background: var(--white);
+  border-top: 1px solid var(--gray-100);
 }
 
 .section-header {
-  text-align: center;
   margin-bottom: var(--space-16);
 }
 
 .section-header h2 {
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: var(--space-4);
-}
-
-.section-header p {
-  font-size: 1.25rem;
-  color: var(--gray-500);
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
+  gap: var(--space-12);
 }
 
 .feature-card {
-  text-align: center;
   padding: var(--space-8);
-  border-radius: var(--radius-xl);
-  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-2xl);
   transition: all var(--transition-base);
 }
 
 .feature-card:hover {
-  background: white;
-  box-shadow: var(--shadow-lg);
+  border-color: var(--black);
   transform: translateY(-4px);
 }
 
@@ -311,69 +201,69 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--primary-100), var(--primary-50));
-  color: var(--primary-600);
+  width: 64px;
+  height: 64px;
   margin-bottom: var(--space-6);
+  color: var(--black);
+  background: var(--gray-50);
+  border-radius: var(--radius-full);
 }
 
 .feature-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   margin-bottom: var(--space-3);
 }
 
 .feature-card p {
-  color: var(--gray-500);
-  line-height: 1.7;
+  color: var(--gray-600);
 }
 
 /* CTA Section */
 .cta {
-  padding: var(--space-16) 0 var(--space-24);
+  padding: var(--space-16) 0 var(--space-20);
 }
 
 .cta-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-16);
-  background: linear-gradient(135deg, var(--gray-900), var(--gray-800));
+  background: var(--black);
   border-radius: var(--radius-2xl);
-  overflow: hidden;
-  position: relative;
-}
-
-.cta-content {
-  max-width: 500px;
+  padding: var(--space-20) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .cta-content h2 {
-  font-size: 2.25rem;
-  color: white;
+  color: var(--white);
+  font-size: 3.5rem;
   margin-bottom: var(--space-4);
 }
 
 .cta-content p {
-  font-size: 1.125rem;
   color: var(--gray-400);
-  margin-bottom: var(--space-8);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-10);
 }
 
 .cta-actions {
   display: flex;
   gap: var(--space-4);
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.cta-visual {
-  font-size: 8rem;
-  opacity: 0.2;
+.btn-outline-white {
+  background: transparent;
+  color: var(--white);
+  border: 1.5px solid var(--white);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  padding: var(--space-3) var(--space-6);
+  transition: all var(--transition-base);
 }
 
-.cta-emoji {
-  filter: grayscale(1);
+.btn-outline-white:hover {
+  background: var(--white);
+  color: var(--black);
 }
 
 /* Responsive */
@@ -381,61 +271,52 @@
   .hero-content {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: var(--space-12);
   }
-
+  
   .hero-text {
-    max-width: 100%;
+    margin: 0 auto;
   }
 
-  .hero-text h1 {
-    font-size: 3rem;
+  .hero-description {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-cta {
     justify-content: center;
   }
-
-  .hero-visual {
-    display: none;
-  }
-
+  
   .features-grid {
     grid-template-columns: 1fr;
-    max-width: 500px;
-    margin: 0 auto;
+    gap: var(--space-6);
   }
 }
 
 @media (max-width: 768px) {
-  .hero {
-    min-height: auto;
-    padding: 120px 0 80px;
-  }
-
   .hero-text h1 {
-    font-size: 2.25rem;
+    font-size: 3rem;
+  }
+  
+  .section-header h2 {
+    font-size: 2.5rem;
   }
 
-  .hero-description {
-    font-size: 1rem;
+  .cta-content h2 {
+    font-size: 2.5rem;
   }
-
-  .hero-scroll {
-    display: none;
-  }
-
+  
   .cta-card {
-    flex-direction: column;
-    text-align: center;
-    padding: var(--space-10) var(--space-6);
+    padding: var(--space-12) var(--space-6);
   }
-
-  .cta-visual {
-    display: none;
-  }
-
+  
   .cta-actions {
-    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
   }
 }
 </style>
