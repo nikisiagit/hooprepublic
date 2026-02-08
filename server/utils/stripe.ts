@@ -17,13 +17,6 @@ export const getStripe = (config: any, event?: any) => {
     // Basic sanitization
     stripeKey = stripeKey?.toString().trim().replace(/[\u200B-\u200D\uFEFF]/g, '')
 
-    if (stripeKey) {
-        // Log metadata (safe) to diagnose the "k_test" vs "sk_test" issue
-        const prefix = stripeKey.substring(0, 7)
-        const suffix = stripeKey.slice(-4)
-        console.log(`[Stripe Auth] Key detected. Prefix: ${prefix}, Suffix: ${suffix}, Length: ${stripeKey.length}`)
-    }
-
     if (!stripeKey || !stripeKey.startsWith('sk_')) {
         const envBranch = rawCfEnv?.CF_PAGES_BRANCH || 'unknown'
         console.error(`[Stripe Error] Invalid or missing Secret Key in ${envBranch}.`)
