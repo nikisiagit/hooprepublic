@@ -7,7 +7,7 @@ pages_build_output_dir = ".output/public"
 [[d1_databases]]
 binding = "DB"
 database_name = "hooprepublic-db"
-database_id = "" # Add your database ID after creating it
+database_id = "31fb20d9-4390-4d2c-9f08-4d1640812c18"
 
 # R2 Storage binding - for court images
 # Run: npx wrangler r2 bucket create hooprepublic-images
