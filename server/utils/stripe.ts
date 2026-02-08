@@ -5,12 +5,13 @@ export const getStripe = (config: any, event?: any) => {
     // 1. Runtime config (standard Nuxt)
     // 2. Cloudflare event environment variables (Standard for CF Workers/Pages)
     // 3. Process environment variables (standard for Node/Local dev)
-    const stripeKey =
+    const stripeKey = (
         config.stripeSecretKey ||
         event?.context?.cloudflare?.env?.NUXT_STRIPE_SECRET_KEY ||
         event?.context?.cloudflare?.env?.STRIPE_SECRET_KEY ||
         process.env.NUXT_STRIPE_SECRET_KEY ||
         process.env.STRIPE_SECRET_KEY
+    )?.trim()
 
     if (!stripeKey) {
         const envName = event?.context?.cloudflare?.env?.CF_PAGES_BRANCH || 'unknown'
