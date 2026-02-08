@@ -134,6 +134,7 @@ definePageMeta({
   layout: false
 })
 
+const { fetchUser } = useUser()
 const router = useRouter()
 
 const form = ref({
@@ -174,6 +175,9 @@ const handleSignup = async () => {
       }
     })
 
+    // Update global user state
+    await fetchUser()
+
     // Redirect to complete profile
     router.push('/profile/setup')
   } catch (err: any) {
@@ -193,6 +197,9 @@ const handleGoogleSuccess = async (response: any) => {
       method: 'POST',
       body: { credential }
     })
+    
+    // Update global user state
+    await fetchUser()
     
     // Check if new user -> maybe redirect to profile setup?
     // Since Google signup creates minimal profile, redirecting to setup helps

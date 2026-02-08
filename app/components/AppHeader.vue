@@ -72,23 +72,19 @@
 </template>
 
 <script setup lang="ts">
-interface User {
-  id: string
-  name: string
-  surname?: string
-  email: string
-  avatar_url?: string | null
-  role: string
-}
-
 const router = useRouter()
 const mobileMenuOpen = ref(false)
 const userMenuOpen = ref(false)
 
-// Fetch current user
-const { data: authData, refresh: refreshAuth } = await useFetch<{ authenticated: boolean; user: User | null }>('/api/auth/me')
+// Use global user state
+const { user, logout, fetchUser } = useUser()
 
-const user = computed(() => authData.value?.user)
+// Fetch user on mount if not present
+onMounted(async () => {
+  if (!user.value) {
+    await fetchUser()
+  }
+})
 
 const userInitials = computed(() => {
   if (!user.value) return ''
@@ -114,15 +110,9 @@ const closeUserMenu = () => {
 }
 
 const handleLogout = async () => {
-  try {
-    await $fetch('/api/auth/logout', { method: 'POST' })
-    await refreshAuth()
-    router.push('/')
-    closeMobileMenu()
-    closeUserMenu()
-  } catch (error) {
-    console.error('Logout error:', error)
-  }
+  await logout()
+  closeMobileMenu()
+  closeUserMenu()
 }
 
 // Click outside directive

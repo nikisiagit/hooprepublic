@@ -87,6 +87,7 @@ definePageMeta({
   layout: false
 })
 
+const { fetchUser } = useUser()
 const router = useRouter()
 
 const form = ref({
@@ -113,6 +114,9 @@ const handleSignin = async () => {
       }
     })
 
+    // Update global user state
+    await fetchUser()
+
     // Redirect to home or intended page
     router.push('/')
   } catch (err: any) {
@@ -132,6 +136,9 @@ const handleGoogleSuccess = async (response: any) => {
       method: 'POST',
       body: { credential }
     })
+    
+    // Update global user state
+    await fetchUser()
     
     // Check if new user -> maybe redirect to profile setup?
     // For now, home

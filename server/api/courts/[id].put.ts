@@ -7,7 +7,14 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Court ID is required' })
     }
 
-    // TODO: Add admin authentication check
+    // Verify admin
+    const user = await getUserFromEvent(event)
+    if (!user || user.role !== 'admin') {
+        throw createError({
+            statusCode: 403,
+            message: 'Unauthorized: Admin access required'
+        })
+    }
 
     try {
         const db = event.context.cloudflare?.env?.DB

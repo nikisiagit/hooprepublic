@@ -295,6 +295,25 @@ interface Court {
 }
 
 const activeTab = ref<'approved' | 'pending'>('approved')
+
+const { user, isAdmin, fetchUser, logout } = useUser()
+const router = useRouter()
+
+// Auth check
+onMounted(async () => {
+  if (!user.value) {
+    await fetchUser()
+  }
+  
+  if (!isAdmin.value) {
+    alert('Access denied: Admins only')
+    router.push('/')
+    return
+  }
+  
+  fetchCourts()
+  fetchTags()
+})
 const showModal = ref(false)
 const editingCourt = ref<Court | null>(null)
 const saving = ref(false)

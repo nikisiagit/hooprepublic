@@ -17,8 +17,10 @@ export default defineEventHandler(async (event) => {
 
         if (db) {
             const courtId = `court_${nanoid(12)}`
-            const isAdmin = body.isAdmin === true // In production, verify from auth
-            const status = isAdmin ? 'approved' : 'pending'
+            // Authenticate user
+            const user = await getUserFromEvent(event)
+            const isAdmin = user?.role === 'admin'
+            const status = isAdmin ? 'approved' : 'pending' // Only admins can approve immediately
 
             // Insert court
             await db.prepare(`
