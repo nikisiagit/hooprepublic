@@ -53,6 +53,17 @@
           <span v-if="loading" class="spinner"></span>
           {{ loading ? 'Signing in...' : 'Sign In' }}
         </button>
+
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+
+        <div class="google-auth-wrapper">
+          <GoogleSignInButton 
+            @success="handleGoogleSuccess" 
+            @error="handleGoogleError" 
+          />
+        </div>
       </form>
 
       <div class="auth-footer">
@@ -70,6 +81,8 @@
 </template>
 
 <script setup lang="ts">
+import { GoogleSignInButton } from 'vue3-google-signin'
+
 definePageMeta({
   layout: false
 })
@@ -107,6 +120,31 @@ const handleSignin = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleGoogleSuccess = async (response: any) => {
+  const { credential } = response
+  loading.value = true
+  error.value = ''
+  
+  try {
+    const res = await $fetch('/api/auth/google', {
+      method: 'POST',
+      body: { credential }
+    })
+    
+    // Check if new user -> maybe redirect to profile setup?
+    // For now, home
+    router.push('/')
+  } catch (err: any) {
+    error.value = err.data?.message || 'Google sign in failed'
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleGoogleError = () => {
+  error.value = 'Google sign in failed'
 }
 </script>
 
@@ -347,5 +385,33 @@ const handleSignin = async () => {
   .auth-container {
     padding: var(--space-6);
   }
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-4) 0;
+  position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.auth-divider span {
+  padding: 0 var(--space-3);
+  color: var(--gray-400);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.google-auth-wrapper {
+  display: flex;
+  justify-content: center;
 }
 </style>

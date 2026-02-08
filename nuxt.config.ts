@@ -8,6 +8,12 @@ export default defineNuxtConfig({
     preset: 'cloudflare-pages',
   },
 
+  runtimeConfig: {
+    public: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID || '', // Provide via environment variable
+    }
+  },
+
   app: {
     head: {
       title: 'HoopRepublic - Book Basketball Courts in London',

@@ -5,12 +5,13 @@
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
+  password_hash TEXT, -- Nullable for OAuth users
   name TEXT NOT NULL,
   surname TEXT,
   avatar_url TEXT,
   role TEXT CHECK(role IN ('user', 'admin')) DEFAULT 'user',
   email_verified INTEGER DEFAULT 0,
+  google_id TEXT UNIQUE, -- innovative: Google link
   created_at TEXT DEFAULT (datetime('now')),
   updated_at TEXT DEFAULT (datetime('now'))
 );
