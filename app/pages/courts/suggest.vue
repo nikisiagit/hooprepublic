@@ -280,13 +280,16 @@ onMounted(() => {
 
 .page-header {
   padding: var(--space-16) 0 var(--space-12);
-  background: linear-gradient(135deg, var(--primary-50), white);
+  background: var(--white);
   text-align: center;
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .page-header h1 {
   font-size: 2.5rem;
   margin-bottom: var(--space-2);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .page-header p {
@@ -300,13 +303,16 @@ onMounted(() => {
 
 .form-section .container {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 320px;
   gap: var(--space-8);
   max-width: 1000px;
 }
 
 .form-card {
   padding: var(--space-8);
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
 }
 
 .form-group {
@@ -318,7 +324,7 @@ onMounted(() => {
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: var(--space-2);
-  color: var(--gray-700);
+  color: var(--gray-900);
 }
 
 .form-row {
@@ -341,7 +347,7 @@ onMounted(() => {
 
 .map-placeholder {
   height: 200px;
-  background: var(--gray-100);
+  background: var(--gray-50);
   border: 2px dashed var(--gray-300);
   border-radius: var(--radius-lg);
   display: flex;
@@ -353,8 +359,8 @@ onMounted(() => {
 }
 
 .map-placeholder:hover {
-  border-color: var(--primary-400);
-  background: var(--primary-50);
+  border-color: var(--black);
+  background: var(--gray-100);
 }
 
 .map-inner {
@@ -369,7 +375,7 @@ onMounted(() => {
 }
 
 .map-inner small {
-  color: var(--primary-600);
+  color: var(--black);
   font-weight: 500;
 }
 
@@ -390,21 +396,26 @@ onMounted(() => {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3);
-  background: var(--gray-50);
-  border: 2px solid var(--gray-200);
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   text-align: left;
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .tag-option:hover {
-  border-color: var(--gray-300);
-  background: white;
+  border-color: var(--black);
+  background: var(--gray-50);
 }
 
 .tag-option.selected {
-  background: var(--primary-50);
-  border-color: var(--primary-500);
+  background: var(--black);
+  border-color: var(--black);
+}
+
+.tag-option.selected .tag-name {
+  color: var(--white);
 }
 
 .tag-icon {
@@ -427,8 +438,8 @@ onMounted(() => {
 }
 
 .info-card {
-  background: var(--accent-50);
-  border: 1px solid var(--accent-200);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   height: fit-content;
@@ -439,7 +450,8 @@ onMounted(() => {
 .info-card h3 {
   font-size: 1rem;
   margin-bottom: var(--space-4);
-  color: var(--accent-800);
+  color: var(--black);
+  font-weight: 700;
 }
 
 .info-card ul {
@@ -451,7 +463,7 @@ onMounted(() => {
 
 .info-card li {
   font-size: 0.9rem;
-  color: var(--accent-700);
+  color: var(--gray-600);
   padding-left: var(--space-5);
   position: relative;
 }
@@ -460,7 +472,8 @@ onMounted(() => {
   content: '•';
   position: absolute;
   left: 0;
-  color: var(--accent-500);
+  color: var(--black);
+  font-weight: 700;
 }
 
 /* Success Modal */
@@ -486,7 +499,7 @@ onMounted(() => {
 .success-icon {
   width: 64px;
   height: 64px;
-  background: var(--success-500);
+  background: var(--black);
   color: white;
   border-radius: var(--radius-full);
   display: flex;
@@ -498,6 +511,8 @@ onMounted(() => {
 
 .success-modal h2 {
   margin-bottom: var(--space-3);
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
 .success-modal p {
