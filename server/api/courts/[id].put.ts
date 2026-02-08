@@ -1,4 +1,7 @@
 // API endpoint to update a court (admin only)
+import { readBody, createError, defineEventHandler } from 'h3'
+import { getUserFromEvent } from '../../utils/auth'
+
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)

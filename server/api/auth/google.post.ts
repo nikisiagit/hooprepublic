@@ -1,5 +1,7 @@
 import { nanoid } from 'nanoid'
 
+import { readBody, createError, setCookie, defineEventHandler } from 'h3'
+
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const { credential } = body

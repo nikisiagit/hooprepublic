@@ -1,3 +1,5 @@
+import { getCookie, setCookie, defineEventHandler } from 'h3'
+
 export default defineEventHandler(async (event) => {
     const db = event.context.cloudflare?.env?.DB
 
