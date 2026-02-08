@@ -1,6 +1,6 @@
 name = "hooprepublic"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = ".output/public"
+pages_build_output_dir = "dist"
 
 # D1 Database binding - you'll need to create this in Cloudflare dashboard
 # Run: npx wrangler d1 create hooprepublic-db
