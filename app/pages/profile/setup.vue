@@ -313,7 +313,7 @@ const handleSubmit = async () => {
 <style scoped>
 .profile-setup-page {
   min-height: 100vh;
-  background: var(--gray-900);
+  background: var(--black);
   color: white;
   padding: var(--space-8) var(--space-4);
 }
@@ -344,16 +344,14 @@ const handleSubmit = async () => {
 }
 
 .logo .accent {
-  background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--gray-400);
 }
 
 .setup-header h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: var(--space-2);
+  color: white;
 }
 
 .setup-header p {
@@ -368,8 +366,8 @@ const handleSubmit = async () => {
 }
 
 .form-section {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gray-900);
+  border: 1px solid var(--gray-800);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
 }
@@ -388,7 +386,7 @@ const handleSubmit = async () => {
 
 .form-group label,
 .section-label {
-  font-weight: 500;
+  font-weight: 600;
   color: white;
   font-size: 0.875rem;
   display: flex;
@@ -405,8 +403,8 @@ const handleSubmit = async () => {
 
 .form-group input {
   padding: var(--space-3) var(--space-4);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--black);
+  border: 1px solid var(--gray-800);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   color: white;
@@ -414,13 +412,13 @@ const handleSubmit = async () => {
 }
 
 .form-group input::placeholder {
-  color: var(--gray-500);
+  color: var(--gray-600);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-500);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--white);
+  background: var(--black);
 }
 
 .photo-upload {
@@ -434,11 +432,12 @@ const handleSubmit = async () => {
   width: 80px;
   height: 80px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--gray-800);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: 1px solid var(--gray-700);
 }
 
 .photo-preview img {
@@ -450,13 +449,14 @@ const handleSubmit = async () => {
 .placeholder-icon {
   font-size: 2rem;
   opacity: 0.5;
+  filter: grayscale(1);
 }
 
 .upload-btn {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--black);
+  border: 1px solid var(--gray-800);
   border-radius: var(--radius-lg);
   cursor: pointer;
   color: var(--gray-400);
@@ -464,7 +464,9 @@ const handleSubmit = async () => {
 }
 
 .upload-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--gray-900);
+  border-color: var(--gray-600);
+  color: white;
 }
 
 .upload-btn input {
@@ -486,23 +488,25 @@ const handleSubmit = async () => {
 
 .pill {
   padding: var(--space-2) var(--space-4);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--black);
+  border: 1px solid var(--gray-800);
   border-radius: var(--radius-full);
-  color: var(--gray-300);
+  color: var(--gray-400);
   font-size: 0.875rem;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .pill:hover {
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--gray-600);
+  color: white;
 }
 
 .pill.active {
-  background: var(--primary-500);
-  border-color: var(--primary-500);
-  color: white;
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--black);
+  font-weight: 600;
 }
 
 .skill-cards {
@@ -514,8 +518,8 @@ const handleSubmit = async () => {
 }
 
 .skill-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--black);
+  border: 1px solid var(--gray-800);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   cursor: pointer;
@@ -524,33 +528,35 @@ const handleSubmit = async () => {
 }
 
 .skill-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--gray-600);
 }
 
 .skill-card.active {
-  border-color: var(--primary-500);
-  background: rgba(249, 115, 22, 0.1);
+  border-color: var(--white);
+  background: var(--gray-900);
 }
 
 .skill-card h4 {
   color: white;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: var(--space-2);
 }
 
 .skill-card p {
-  color: var(--gray-400);
+  color: var(--gray-500);
   font-size: 0.75rem;
   line-height: 1.5;
 }
 
 .error-message {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error-500);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
+  text-align: center;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .form-actions {
@@ -562,18 +568,19 @@ const handleSubmit = async () => {
 .btn-secondary {
   padding: var(--space-3) var(--space-6);
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-700);
+  border-radius: var(--radius-full);
   color: var(--gray-400);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--gray-800);
   color: white;
+  border-color: var(--gray-500);
 }
 
 .btn-primary {
@@ -582,31 +589,31 @@ const handleSubmit = async () => {
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
+  background: var(--white);
+  color: var(--black);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: var(--gray-200);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
 }
 
 .btn-primary:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-top-color: black;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -630,6 +637,10 @@ const handleSubmit = async () => {
 
   .form-actions {
     flex-direction: column;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
   }
 }
 </style>
