@@ -2,6 +2,10 @@ name = "hooprepublic"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "dist"
 
+[vars]
+GOOGLE_CLIENT_ID = "915080411323-1ub03rskh7t96ut9dd19la2hnp7khkl6.apps.googleusercontent.com"
+
+
 # D1 Database binding - you'll need to create this in Cloudflare dashboard
 # Run: npx wrangler d1 create hooprepublic-db
 [[d1_databases]]
