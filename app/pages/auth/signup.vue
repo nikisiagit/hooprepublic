@@ -55,7 +55,8 @@
               minlength="8"
             />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
-              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.03 1.28-.09"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
             </button>
           </div>
           <span class="hint">At least 8 characters</span>
@@ -63,13 +64,25 @@
 
         <div class="form-group">
           <label for="confirmPassword">Confirm Password</label>
-          <input 
-            id="confirmPassword" 
-            v-model="form.confirmPassword" 
-            :type="showPassword ? 'text' : 'password'" 
-            placeholder="Confirm your password"
-            required 
-          />
+          <div class="password-input">
+            <input 
+              id="confirmPassword" 
+              v-model="form.confirmPassword" 
+              :type="showPassword ? 'text' : 'password'" 
+              placeholder="Confirm your password"
+              required 
+            />
+            <!-- No toggle button here as it shares state with the main password field, or maybe add one that ALSO toggles the same state? 
+                 Actually, usually show/hide toggles all password fields or each has its own. 
+                 The simplest is to just let the main toggle control both since they share the state variable.
+                 BUT, if I want to have icons in both, I should add the icon here too.
+                 Wait, if I add the icon here, I should make sure it toggles the SAME state variable. 
+                 Yes, that's fine. -->
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+              <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.03 1.28-.09"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+            </button>
+          </div>
         </div>
 
         <div v-if="error" class="error-message">
@@ -339,6 +352,12 @@ const handleGoogleError = () => {
 .password-input input {
   width: 100%;
   padding-right: var(--space-12);
+}
+
+/* Hide native password toggle in Edge/IE */
+.password-input input::-ms-reveal,
+.password-input input::-ms-clear {
+  display: none;
 }
 
 .toggle-password {
