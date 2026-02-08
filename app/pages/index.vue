@@ -22,14 +22,7 @@
         </div>
 
         <div class="hero-visual animate-slide-in">
-          <!-- Geometric Abstract Illustration Placeholder -->
-          <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-illustration">
-            <circle cx="200" cy="200" r="150" stroke="#F5F5F5" stroke-width="40"/>
-            <path d="M200 50 C282.843 50 350 117.157 350 200" stroke="black" stroke-width="40" stroke-linecap="round"/>
-            <circle cx="200" cy="200" r="80" fill="#FAFAFA"/>
-            <path d="M160 200 L240 200" stroke="black" stroke-width="8" stroke-linecap="round"/>
-            <path d="M200 160 L200 240" stroke="black" stroke-width="8" stroke-linecap="round"/>
-          </svg>
+          <img src="/images/hero-illustration.png" alt="Basketball Player Illustration" class="hero-illustration" />
         </div>
       </div>
     </section>
