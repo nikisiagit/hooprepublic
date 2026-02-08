@@ -2,24 +2,32 @@ import Stripe from 'stripe'
 
 export const getStripe = (config: any, event?: any) => {
     // Priority:
-    // 1. Runtime config (standard Nuxt)
-    // 2. Cloudflare event environment variables (Standard for CF Workers/Pages)
-    // 3. Process environment variables (standard for Node/Local dev)
-    const stripeKey = (
-        config.stripeSecretKey ||
-        event?.context?.cloudflare?.env?.NUXT_STRIPE_SECRET_KEY ||
-        event?.context?.cloudflare?.env?.STRIPE_SECRET_KEY ||
-        process.env.NUXT_STRIPE_SECRET_KEY ||
-        process.env.STRIPE_SECRET_KEY
-    )?.trim()
+    // 1. Raw Cloudflare environment variable (most reliable in production)
+    // 2. Process environment variable (local dev)
+    // 3. Nuxt Runtime Config (fallback)
+    const rawCfEnv = event?.context?.cloudflare?.env
 
-    if (!stripeKey) {
-        const envName = event?.context?.cloudflare?.env?.CF_PAGES_BRANCH || 'unknown'
-        console.error(`[Stripe Error] Secret Key missing in ${envName} environment.`)
-        if (event?.context?.cloudflare?.env) {
-            console.error('Available keys:', Object.keys(event.context.cloudflare.env))
-        }
-        throw new Error(`Stripe Secret Key is missing in the ${envName} environment. Please ensure NUXT_STRIPE_SECRET_KEY is set and redeploy.`)
+    let stripeKey =
+        rawCfEnv?.NUXT_STRIPE_SECRET_KEY ||
+        rawCfEnv?.STRIPE_SECRET_KEY ||
+        process.env.NUXT_STRIPE_SECRET_KEY ||
+        process.env.STRIPE_SECRET_KEY ||
+        config.stripeSecretKey
+
+    // Basic sanitization
+    stripeKey = stripeKey?.toString().trim().replace(/[\u200B-\u200D\uFEFF]/g, '')
+
+    if (stripeKey) {
+        // Log metadata (safe) to diagnose the "k_test" vs "sk_test" issue
+        const prefix = stripeKey.substring(0, 7)
+        const suffix = stripeKey.slice(-4)
+        console.log(`[Stripe Auth] Key detected. Prefix: ${prefix}, Suffix: ${suffix}, Length: ${stripeKey.length}`)
+    }
+
+    if (!stripeKey || !stripeKey.startsWith('sk_')) {
+        const envBranch = rawCfEnv?.CF_PAGES_BRANCH || 'unknown'
+        console.error(`[Stripe Error] Invalid or missing Secret Key in ${envBranch}.`)
+        throw new Error(`Stripe Secret Key is missing or invalid (must start with sk_). Check your Cloudflare dashboard variables for ${envBranch}.`)
     }
 
     return new Stripe(stripeKey, {
