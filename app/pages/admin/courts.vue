@@ -88,7 +88,7 @@
                     >
                       {{ tag.icon }} {{ tag.name }}
                     </span>
-                    <span v-if="court.tags?.length > 3" class="tag-more">
+                    <span v-if="court.tags && court.tags.length > 3" class="tag-more">
                       +{{ court.tags.length - 3 }}
                     </span>
                   </div>
@@ -495,7 +495,8 @@ onMounted(() => {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: var(--gray-100);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-lg);
   font-weight: 500;
   color: var(--gray-600);
@@ -503,12 +504,14 @@ onMounted(() => {
 }
 
 .tab:hover {
-  background: var(--gray-200);
+  background: var(--gray-50);
+  border-color: var(--black);
 }
 
 .tab.active {
-  background: var(--primary-500);
+  background: var(--black);
   color: white;
+  border-color: var(--black);
 }
 
 .tab-count {
@@ -520,7 +523,7 @@ onMounted(() => {
 }
 
 .tab:not(.active) .tab-count {
-  background: var(--gray-200);
+  background: var(--gray-100);
 }
 
 .tab-count.warning {
@@ -536,7 +539,7 @@ onMounted(() => {
 .table-wrapper {
   background: white;
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
   overflow: hidden;
 }
 
@@ -578,6 +581,7 @@ onMounted(() => {
   height: 48px;
   object-fit: cover;
   border-radius: var(--radius-md);
+  background: var(--gray-100);
 }
 
 .court-name-cell strong {
@@ -611,14 +615,16 @@ onMounted(() => {
   background: var(--gray-100);
   border-radius: var(--radius-full);
   white-space: nowrap;
+  border: 1px solid var(--gray-200);
 }
 
 .tag-more {
   padding: 2px 8px;
   font-size: 0.7rem;
-  background: var(--primary-100);
-  color: var(--primary-700);
+  background: var(--gray-100);
+  color: var(--gray-700);
   border-radius: var(--radius-full);
+  border: 1px solid var(--gray-200);
 }
 
 .rating-cell {
@@ -667,12 +673,15 @@ onMounted(() => {
 }
 
 .action-btn.edit {
-  background: var(--gray-100);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   color: var(--gray-600);
 }
 
 .action-btn.edit:hover {
-  background: var(--gray-200);
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+  color: var(--black);
 }
 
 .action-btn.delete {
@@ -703,6 +712,7 @@ onMounted(() => {
   justify-content: center;
   z-index: 1000;
   padding: var(--space-4);
+  backdrop-filter: blur(4px);
 }
 
 .modal {
@@ -712,6 +722,7 @@ onMounted(() => {
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: var(--shadow-xl);
 }
 
 .modal-header {
@@ -724,6 +735,7 @@ onMounted(() => {
 
 .modal-header h2 {
   font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .modal-close {
@@ -740,7 +752,7 @@ onMounted(() => {
 
 .modal-close:hover {
   background: var(--gray-100);
-  color: var(--gray-600);
+  color: var(--black);
 }
 
 .modal-body {
@@ -754,9 +766,9 @@ onMounted(() => {
 .form-group label {
   display: block;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: var(--space-2);
-  color: var(--gray-700);
+  color: var(--gray-900);
 }
 
 .form-row {
@@ -779,20 +791,23 @@ onMounted(() => {
 .tag-option {
   padding: var(--space-2) var(--space-3);
   font-size: 0.8rem;
-  background: var(--gray-100);
-  border: 2px solid transparent;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-full);
   transition: all var(--transition-fast);
+  color: var(--gray-600);
+  cursor: pointer;
 }
 
 .tag-option:hover {
-  background: var(--gray-200);
+  background: var(--gray-50);
+  border-color: var(--gray-300);
 }
 
 .tag-option.selected {
-  background: var(--primary-100);
-  border-color: var(--primary-500);
-  color: var(--primary-700);
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
 }
 
 .modal-footer {
