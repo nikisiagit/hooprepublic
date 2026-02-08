@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
-    const stripe = getStripe(config)
+    const stripe = getStripe(config, event)
     const body = await readBody(event)
     const user = await getUserFromEvent(event)
 

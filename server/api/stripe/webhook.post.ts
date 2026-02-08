@@ -1,12 +1,15 @@
 import Stripe from 'stripe'
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig(event)
-    const stripe = getStripe(config)
+    const stripe = getStripe(config, event)
     const sig = getHeader(event, 'stripe-signature')
     const endpointSecret = config.stripeWebhookSecret
 
     try {
         const body = await readRawBody(event)
+        if (!sig || !body) {
+            throw createError({ statusCode: 400, message: 'Missing signature or body' })
+        }
         const stripeEvent = stripe.webhooks.constructEvent(body, sig, endpointSecret)
 
         switch (stripeEvent.type) {

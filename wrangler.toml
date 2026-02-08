@@ -4,6 +4,7 @@ pages_build_output_dir = "dist"
 
 [vars]
 GOOGLE_CLIENT_ID = "915080411323-1ub03rskh7t96ut9dd19la2hnp7khkl6.apps.googleusercontent.com"
+NUXT_STRIPE_PUBLIC_KEY = "pk_test_51SyARV3b1DgiwfJtLS2HLCurSaqUqVW3ghLGg3ecMQimlQIpRbu27mt5XhXRKdoTUkw66U6PFttG6PlVF59G6PQc005ohv6kzL"
 
 
 # D1 Database binding - you'll need to create this in Cloudflare dashboard
