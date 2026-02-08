@@ -363,6 +363,10 @@ onMounted(() => {
   object-fit: cover;
 }
 
+.court-header {
+  margin-bottom: var(--space-3);
+}
+
 .location-top {
   display: block;
   font-size: 0.75rem;
@@ -371,6 +375,7 @@ onMounted(() => {
   letter-spacing: 0.05em;
   font-weight: 700;
   margin-bottom: var(--space-2);
+  line-height: normal;
 }
 
 .court-address {
@@ -379,10 +384,28 @@ onMounted(() => {
   line-height: 1.4;
 }
 
+.court-features {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.feature {
+  padding: var(--space-1) var(--space-3);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--gray-700);
+  white-space: nowrap;
+}
+
 .court-footer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--gray-100);
