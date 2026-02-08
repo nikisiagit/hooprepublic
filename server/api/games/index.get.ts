@@ -1,13 +1,17 @@
 // API endpoint to fetch open games from D1 database
 export default defineEventHandler(async (event) => {
-    try {
-        const db = event.context.cloudflare?.env?.DB
+  try {
+    const db = event.context.cloudflare?.env?.DB
 
-        if (db) {
-            // Using D1 in production
-            const { results } = await db.prepare(`
+    if (db) {
+      // Using D1 in production
+      const { results } = await db.prepare(`
         SELECT 
           b.id,
+          b.title,
+          b.description,
+          b.price,
+          b.level,
           b.booking_date,
           b.start_time,
           b.end_time,
@@ -25,13 +29,13 @@ export default defineEventHandler(async (event) => {
         ORDER BY b.booking_date ASC, b.start_time ASC
       `).all()
 
-            return results
-        }
-
-        // No database connection - return empty array
-        return []
-    } catch (error) {
-        console.error('Error fetching games:', error)
-        return []
+      return results
     }
+
+    // No database connection - return empty array
+    return []
+  } catch (error) {
+    console.error('Error fetching games:', error)
+    return []
+  }
 })

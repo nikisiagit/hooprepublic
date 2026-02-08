@@ -56,8 +56,8 @@
           <p class="empty-state-text">
             Be the first to create an open game! Book a court and invite others to join.
           </p>
-          <NuxtLink to="/courts" class="btn btn-primary" style="margin-top: var(--space-6)">
-            Book a Court
+          <NuxtLink to="/games/create" class="btn btn-primary" style="margin-top: var(--space-6)">
+            Create a Game
           </NuxtLink>
         </div>
 
