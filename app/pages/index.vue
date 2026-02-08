@@ -22,7 +22,7 @@
         </div>
 
         <div class="hero-visual animate-slide-in">
-          <img src="/images/hero-illustration.png" alt="Basketball Player Illustration" class="hero-illustration" />
+          <img src="/hero-illustration.png" alt="Basketball Player Dunking Illustration" class="hero-illustration" />
         </div>
       </div>
     </section>

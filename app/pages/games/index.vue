@@ -2,13 +2,13 @@
   <div class="games-page">
     <section class="page-header">
       <div class="container">
-        <h1>Open Games</h1>
+        <h1>Find a Game</h1>
         <p>Join pickup games and meet other players</p>
       </div>
     </section>
 
     <!-- Filters -->
-    <section class="filters-section">
+    <section class="filters-section" v-if="games.length > 0">
       <div class="container">
         <div class="filters-bar glass">
           <div class="date-filters">
@@ -149,11 +149,12 @@ const upcomingDays = computed<Day[]>(() => {
     const date = new Date(today)
     date.setDate(today.getDate() + i)
     
-    const value = date.toISOString().split('T')[0] || ''
+    const value = date.toISOString().split('T')[0] ?? ''
     const label = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : dayNames[date.getDay()]
     const dateStr = date.getDate().toString()
     
-    days.push({ value, label, date: dateStr })
+    // Ensure value is a string (TS fix)
+    days.push({ value: value || '', label, date: dateStr })
   }
   
   return days
@@ -161,8 +162,9 @@ const upcomingDays = computed<Day[]>(() => {
 
 // Set default selected date
 onMounted(() => {
-  if (upcomingDays.value.length > 0) {
-    selectedDate.value = upcomingDays.value[0].value
+  const days = upcomingDays.value
+  if (days.length > 0 && days[0]) {
+    selectedDate.value = days[0].value
   }
   fetchGames()
 })
@@ -190,8 +192,8 @@ const formatTime = (time: string) => {
   const parts = time.split(':')
   if (parts.length < 2) return time
   
-  const hours = parts[0]
-  const minutes = parts[1]
+  const hours = parts[0] ?? '0'
+  const minutes = parts[1] ?? '00'
   const hour = parseInt(hours)
   const ampm = hour >= 12 ? 'PM' : 'AM'
   const displayHour = hour % 12 || 12
