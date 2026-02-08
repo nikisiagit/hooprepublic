@@ -40,12 +40,22 @@
               <option value="hackney">Hackney</option>
               <option value="islington">Islington</option>
             </select>
+            
+            <button 
+              class="view-toggle-btn" 
+              @click="isMapView = !isMapView"
+              :class="{ active: isMapView }"
+              aria-label="Toggle map view"
+            >
+              <span v-if="!isMapView" class="toggle-icon">🗺️ Map</span>
+              <span v-else class="toggle-icon">📋 List</span>
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Courts Grid -->
+    <!-- Courts Content -->
     <section class="courts-section">
       <div class="container">
         <!-- Loading State -->
@@ -62,6 +72,7 @@
 
         <!-- Empty State -->
         <div v-else-if="courts.length === 0" class="empty-state">
+          <!-- ... empty state content ... -->
           <div class="empty-state-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
               <circle cx="11" cy="11" r="8"/>
@@ -77,7 +88,17 @@
           </NuxtLink>
         </div>
 
-        <!-- Courts List -->
+        <!-- Map View -->
+        <div v-else-if="isMapView" class="map-view-wrapper">
+          <ClientOnly>
+            <CourtMap :courts="filteredCourts" />
+            <template #fallback>
+              <div class="map-loading">Loading Map...</div>
+            </template>
+          </ClientOnly>
+        </div>
+
+        <!-- List View -->
         <div v-else class="courts-grid">
           <div 
             v-for="court in filteredCourts" 
@@ -148,6 +169,8 @@ interface Court {
   postcode?: string
   borough?: string
   image_url?: string
+  latitude: number
+  longitude: number
   tags?: Tag[]
   avg_rating?: number
   review_count?: number
@@ -155,12 +178,14 @@ interface Court {
 
 const searchQuery = ref('')
 const loading = ref(false)
+const isMapView = ref(false)
 const courts = ref<Court[]>([])
 
 const filters = reactive({
   type: '',
   borough: ''
 })
+
 
 // Get court type from tags
 const getCourtType = (court: Court): string | null => {
@@ -534,5 +559,55 @@ onMounted(() => {
   .courts-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all var(--transition-fast);
+}
+
+.view-toggle-btn:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+}
+
+.view-toggle-btn.active {
+  background: var(--black);
+  color: white;
+  border-color: var(--black);
+}
+
+.toggle-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.map-view-wrapper {
+  background: var(--gray-50);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  /* height handled by CourtMap component typically, but ensuring container */
+  min-height: 400px; 
+}
+
+.map-loading {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-500);
+  font-weight: 500;
 }
 </style>
