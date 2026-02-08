@@ -2,6 +2,14 @@
   <header class="header glass">
     <div class="container header-content">
       <NuxtLink to="/" class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="28" height="28" class="logo-icon">
+          <circle cx="256" cy="256" r="240" fill="#f97316"/>
+          <path d="M256 16C123.45 16 16 123.45 16 256s107.45 240 240 240 240-107.45 240-240S388.55 16 256 16z" fill="none" stroke="#fff" stroke-width="24"/>
+          <path d="M256 16v480M16 256h480" fill="none" stroke="#fff" stroke-width="24"/>
+          <path d="M256 16C123.45 16 16 123.45 16 256" fill="none" stroke="#fff" stroke-width="24"/>
+          <path d="M496 256c0-132.55-107.45-240-240-240" fill="none" stroke="#fff" stroke-width="24"/>
+          <circle cx="256" cy="256" r="120" fill="none" stroke="#fff" stroke-width="24"/>
+        </svg>
         <span class="logo-text">HoopRepublic</span>
       </NuxtLink>
 
@@ -151,6 +159,10 @@ const vClickOutside = {
 .logo {
   display: flex;
   align-items: center;
+}
+
+.logo-icon {
+  margin-right: var(--space-2);
 }
 
 .logo-text {
