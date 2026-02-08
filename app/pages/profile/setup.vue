@@ -8,6 +8,9 @@
         </NuxtLink>
         <h1>Complete Your Profile</h1>
         <p>Tell us about yourself so we can match you with the right games</p>
+        <div v-if="memberSince" class="member-since">
+          Member since {{ memberSince }}
+        </div>
       </div>
 
       <form @submit.prevent="handleSubmit" class="setup-form">
@@ -157,7 +160,16 @@ definePageMeta({
   layout: false
 })
 
+const { user } = useUser()
 const router = useRouter()
+
+const memberSince = computed(() => {
+  if (!user.value?.created_at) return ''
+  return new Date(user.value.created_at).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  })
+})
 
 const positions = [
   { value: 'point_guard', label: 'Point Guard' },
@@ -232,6 +244,14 @@ const photoPreview = ref('')
 const photoFile = ref<File | null>(null)
 const loading = ref(false)
 const error = ref('')
+
+// Pre-fill user data
+watchEffect(() => {
+  if (user.value) {
+    if (!form.value.name && user.value.name) form.value.name = user.value.name
+    if (!form.value.surname && user.value.surname) form.value.surname = user.value.surname
+  }
+})
 
 const handlePhotoChange = (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -313,8 +333,8 @@ const handleSubmit = async () => {
 <style scoped>
 .profile-setup-page {
   min-height: 100vh;
-  background: var(--black);
-  color: white;
+  background: var(--white);
+  color: var(--black);
   padding: var(--space-8) var(--space-4);
 }
 
@@ -336,7 +356,7 @@ const handleSubmit = async () => {
   font-weight: 800;
   margin-bottom: var(--space-6);
   text-decoration: none;
-  color: white;
+  color: var(--black);
 }
 
 .logo-icon {
@@ -344,19 +364,30 @@ const handleSubmit = async () => {
 }
 
 .logo .accent {
-  color: var(--gray-400);
+  color: var(--gray-600);
 }
 
 .setup-header h1 {
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: var(--space-2);
-  color: white;
+  color: var(--black);
 }
 
 .setup-header p {
-  color: var(--gray-400);
+  color: var(--gray-500);
   font-size: 1.125rem;
+  margin-bottom: var(--space-4);
+}
+
+.member-since {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-weight: 500;
 }
 
 .setup-form {
@@ -366,10 +397,11 @@ const handleSubmit = async () => {
 }
 
 .form-section {
-  background: var(--gray-900);
-  border: 1px solid var(--gray-800);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
 }
 
 .form-row {
@@ -387,7 +419,7 @@ const handleSubmit = async () => {
 .form-group label,
 .section-label {
   font-weight: 600;
-  color: white;
+  color: var(--gray-900);
   font-size: 0.875rem;
   display: flex;
   align-items: center;
@@ -403,22 +435,22 @@ const handleSubmit = async () => {
 
 .form-group input {
   padding: var(--space-3) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--white);
+  border: 1px solid var(--gray-300);
   border-radius: var(--radius-lg);
   font-size: 1rem;
-  color: white;
+  color: var(--black);
   transition: all var(--transition-fast);
 }
 
 .form-group input::placeholder {
-  color: var(--gray-600);
+  color: var(--gray-400);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--white);
-  background: var(--black);
+  border-color: var(--black);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
 }
 
 .photo-upload {
@@ -432,12 +464,12 @@ const handleSubmit = async () => {
   width: 80px;
   height: 80px;
   border-radius: var(--radius-full);
-  background: var(--gray-800);
+  background: var(--gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--gray-200);
 }
 
 .photo-preview img {
@@ -455,18 +487,18 @@ const handleSubmit = async () => {
 .upload-btn {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-lg);
   cursor: pointer;
-  color: var(--gray-400);
+  color: var(--gray-600);
   transition: all var(--transition-fast);
 }
 
 .upload-btn:hover {
-  background: var(--gray-900);
-  border-color: var(--gray-600);
-  color: white;
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+  color: var(--black);
 }
 
 .upload-btn input {
@@ -488,24 +520,24 @@ const handleSubmit = async () => {
 
 .pill {
   padding: var(--space-2) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-full);
-  color: var(--gray-400);
+  color: var(--gray-600);
   font-size: 0.875rem;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .pill:hover {
-  border-color: var(--gray-600);
-  color: white;
+  border-color: var(--gray-400);
+  color: var(--black);
 }
 
 .pill.active {
-  background: var(--white);
-  border-color: var(--white);
-  color: var(--black);
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
   font-weight: 600;
 }
 
@@ -518,8 +550,8 @@ const handleSubmit = async () => {
 }
 
 .skill-card {
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   cursor: pointer;
@@ -528,23 +560,24 @@ const handleSubmit = async () => {
 }
 
 .skill-card:hover {
-  border-color: var(--gray-600);
+  border-color: var(--gray-400);
 }
 
 .skill-card.active {
-  border-color: var(--white);
-  background: var(--gray-900);
+  border-color: var(--black);
+  background: var(--gray-50);
+  box-shadow: 0 0 0 1px var(--black);
 }
 
 .skill-card h4 {
-  color: white;
+  color: var(--black);
   font-size: 0.875rem;
   font-weight: 700;
   margin-bottom: var(--space-2);
 }
 
 .skill-card p {
-  color: var(--gray-500);
+  color: var(--gray-600);
   font-size: 0.75rem;
   line-height: 1.5;
 }
@@ -568,9 +601,9 @@ const handleSubmit = async () => {
 .btn-secondary {
   padding: var(--space-3) var(--space-6);
   background: transparent;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-full);
-  color: var(--gray-400);
+  color: var(--gray-600);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -578,9 +611,9 @@ const handleSubmit = async () => {
 }
 
 .btn-secondary:hover {
-  background: var(--gray-800);
-  color: white;
-  border-color: var(--gray-500);
+  background: var(--gray-50);
+  color: var(--black);
+  border-color: var(--gray-400);
 }
 
 .btn-primary {
@@ -589,8 +622,8 @@ const handleSubmit = async () => {
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  background: var(--white);
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
   border: none;
   border-radius: var(--radius-full);
   font-size: 1rem;
@@ -600,7 +633,7 @@ const handleSubmit = async () => {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--gray-200);
+  background: var(--gray-800);
   transform: translateY(-1px);
 }
 
@@ -612,8 +645,8 @@ const handleSubmit = async () => {
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(0, 0, 0, 0.3);
-  border-top-color: black;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -629,6 +662,7 @@ const handleSubmit = async () => {
 
   .skill-cards {
     grid-template-columns: 1fr;
+    overflow-x: auto;
   }
 
   .skill-card {
