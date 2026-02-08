@@ -55,6 +55,9 @@
                   <p>{{ court.borough }}</p>
                 </div>
               </div>
+              <div v-if="!loadingCourts && courts.length === 0" class="no-courts">
+                No courts available. Please try refreshing or contact support.
+              </div>
             </div>
             <div v-if="loadingCourts" class="loading-text">Loading courts...</div>
           </div>
@@ -433,5 +436,12 @@ input:focus, textarea:focus, select:focus {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.no-courts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--gray-500);
 }
 </style>
