@@ -173,7 +173,7 @@ const formatDate = (date: string | undefined) => {
 
 <style scoped>
 .profile-page {
-  padding: var(--space-8) 0;
+  padding: 80px var(--space-4) var(--space-8);
   min-height: calc(100vh - 80px);
 }
 

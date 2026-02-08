@@ -1,3 +1,5 @@
+import { readBody, createError, getCookie, defineEventHandler } from 'h3'
+
 export default defineEventHandler(async (event) => {
     const db = event.context.cloudflare?.env?.DB
 
@@ -19,11 +21,11 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const { name, surname, position, skillLevel, preferredDays, preferredAreas, bio } = body
+    const { name, surname, position, skillLevel, preferredDays, preferredAreas, bio, avatarUrl } = body
 
     try {
         // Update user basic info
-        if (name || surname) {
+        if (name || surname || avatarUrl) {
             const updates = []
             const values = []
 
@@ -34,6 +36,10 @@ export default defineEventHandler(async (event) => {
             if (surname !== undefined) {
                 updates.push('surname = ?')
                 values.push(surname)
+            }
+            if (avatarUrl !== undefined) {
+                updates.push('avatar_url = ?')
+                values.push(avatarUrl)
             }
 
             updates.push('updated_at = datetime("now")')

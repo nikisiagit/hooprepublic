@@ -1,6 +1,6 @@
 <template>
   <div class="profile-edit-page">
-    <div class="setup-container">
+    <div class="container container-narrow">
       <div class="setup-header">
         <NuxtLink to="/profile" class="back-link">← Back to Profile</NuxtLink>
         <h1>Edit Your Profile</h1>
@@ -45,10 +45,13 @@
               <div class="photo-placeholder" v-else>
                 <span class="placeholder-icon">📷</span>
               </div>
-              <label class="upload-btn">
-                <input type="file" accept="image/*" @change="handlePhotoChange" />
-                <span>Choose an image...</span>
-              </label>
+              <div class="photo-actions">
+                <label class="upload-btn">
+                  <input type="file" accept="image/*" @change="handlePhotoChange" />
+                  <span>Choose new image...</span>
+                </label>
+                <p class="photo-hint">Max size 500KB. For best results use a square image.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -136,10 +139,10 @@
         </div>
 
         <div class="form-actions">
-          <NuxtLink to="/profile" class="btn-secondary">
+          <NuxtLink to="/profile" class="btn btn-secondary">
             Cancel
           </NuxtLink>
-          <button type="submit" class="btn-primary" :disabled="loading">
+          <button type="submit" class="btn btn-primary" :disabled="loading">
             <span v-if="loading" class="spinner"></span>
             {{ loading ? 'Saving...' : 'Save Changes' }}
           </button>
@@ -154,10 +157,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: false
-})
-
 const router = useRouter()
 
 const positions = [
@@ -259,8 +258,17 @@ onMounted(async () => {
 const handlePhotoChange = (event: Event) => {
   const target = event.target as HTMLInputElement
   if (target.files && target.files[0]) {
-    photoFile.value = target.files[0]
-    photoPreview.value = URL.createObjectURL(target.files[0])
+    const file = target.files[0]
+    if (file.size > 500 * 1024) {
+      error.value = 'Image too large (max 500KB)'
+      return
+    }
+    photoFile.value = file
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      photoPreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
   }
 }
 
@@ -301,7 +309,8 @@ const handleSubmit = async () => {
         position: form.value.position,
         skillLevel: form.value.skillLevel,
         preferredDays: form.value.preferredDays,
-        preferredAreas: form.value.preferredAreas
+        preferredAreas: form.value.preferredAreas,
+        avatarUrl: photoPreview.value || form.value.avatarUrl
       }
     })
 
@@ -317,14 +326,9 @@ const handleSubmit = async () => {
 <style scoped>
 .profile-edit-page {
   min-height: 100vh;
-  background: var(--black);
-  color: white;
-  padding: var(--space-8) var(--space-4);
-}
-
-.setup-container {
-  max-width: 800px;
-  margin: 0 auto;
+  background: var(--white);
+  color: var(--black);
+  padding: 100px var(--space-4) var(--space-20);
 }
 
 .setup-header {
@@ -337,45 +341,45 @@ const handleSubmit = async () => {
   position: absolute;
   top: 0;
   left: 0;
-  color: var(--gray-400);
+  color: var(--gray-500);
   font-size: 0.875rem;
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .back-link:hover {
-  color: white;
+  color: var(--black);
 }
 
 .setup-header h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: var(--space-2);
-  color: white;
+  color: var(--black);
 }
 
 .setup-header p {
-  color: var(--gray-400);
+  color: var(--gray-500);
   font-size: 1.125rem;
 }
 
 .setup-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-6);
 }
 
 .form-section {
-  background: var(--gray-900);
-  border: 1px solid var(--gray-800);
+  background: white;
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  padding: var(--space-8);
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .form-group {
@@ -386,54 +390,59 @@ const handleSubmit = async () => {
 
 .form-group label,
 .section-label {
-  font-weight: 600;
-  color: white;
+  font-weight: 700;
+  color: var(--black);
   font-size: 0.875rem;
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .required {
-  color: var(--gray-500);
-  font-weight: 400;
+  color: var(--gray-400);
+  font-weight: 500;
   font-size: 0.75rem;
   margin-left: auto;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .form-group input {
   padding: var(--space-3) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-lg);
   font-size: 1rem;
-  color: white;
+  color: var(--black);
   transition: all var(--transition-fast);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--white);
-  background: var(--black);
+  border-color: var(--black);
+  background: white;
 }
 
 .photo-upload {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .photo-preview,
 .photo-placeholder {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: var(--radius-full);
-  background: var(--gray-800);
+  background: var(--gray-100);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--gray-200);
+  flex-shrink: 0;
 }
 
 .photo-preview img {
@@ -443,29 +452,42 @@ const handleSubmit = async () => {
 }
 
 .placeholder-icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
   opacity: 0.5;
 }
 
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
 .upload-btn {
-  flex: 1;
-  padding: var(--space-3) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
-  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-4);
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
   cursor: pointer;
-  color: var(--gray-400);
+  color: var(--black);
+  font-weight: 600;
+  font-size: 0.875rem;
   transition: all var(--transition-fast);
+  display: inline-block;
+  text-align: center;
 }
 
 .upload-btn:hover {
-  background: var(--gray-900);
-  border-color: var(--gray-600);
-  color: white;
+  background: var(--gray-50);
+  border-color: var(--black);
 }
 
 .upload-btn input {
   display: none;
+}
+
+.photo-hint {
+  font-size: 0.75rem;
+  color: var(--gray-400);
 }
 
 .section-hint {
@@ -483,132 +505,86 @@ const handleSubmit = async () => {
 
 .pill {
   padding: var(--space-2) var(--space-4);
-  background: var(--black);
-  border: 1px solid var(--gray-800);
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
   border-radius: var(--radius-full);
-  color: var(--gray-400);
+  color: var(--gray-600);
   font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .pill:hover {
-  border-color: var(--gray-600);
-  color: white;
+  border-color: var(--gray-400);
+  color: var(--black);
 }
 
 .pill.active {
-  background: var(--white);
-  border-color: var(--white);
-  color: var(--black);
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
   font-weight: 600;
 }
 
 .skill-cards {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   overflow-x: auto;
-  padding-bottom: var(--space-2);
-  scrollbar-width: none;
-}
-
-.skill-cards::-webkit-scrollbar {
-  display: none;
+  padding-bottom: var(--space-4);
+  scrollbar-width: thin;
 }
 
 .skill-card {
-  background: var(--black);
-  border: 1px solid var(--gray-800);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
   cursor: pointer;
   transition: all var(--transition-fast);
-  min-width: 250px;
+  min-width: 280px;
+  flex-shrink: 0;
 }
 
 .skill-card:hover {
-  border-color: var(--gray-600);
+  border-color: var(--gray-400);
 }
 
 .skill-card.active {
-  border-color: var(--white);
-  background: var(--gray-900);
+  border-color: var(--black);
+  background: white;
+  box-shadow: var(--shadow-md);
 }
 
 .skill-card h4 {
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 700;
+  color: var(--black);
+  font-size: 1rem;
+  font-weight: 800;
   margin-bottom: var(--space-2);
 }
 
 .skill-card p {
   color: var(--gray-500);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .error-message {
   background: rgba(239, 68, 68, 0.1);
   color: var(--error-500);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
   text-align: center;
   border: 1px solid rgba(239, 68, 68, 0.2);
+  font-weight: 600;
 }
 
 .form-actions {
   display: flex;
   gap: var(--space-4);
   justify-content: flex-end;
-}
-
-.btn-secondary {
-  padding: var(--space-3) var(--space-6);
-  background: transparent;
-  border: 1px solid var(--gray-700);
-  border-radius: var(--radius-full);
-  color: var(--gray-400);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-}
-
-.btn-secondary:hover {
-  background: var(--gray-800);
-  color: white;
-  border-color: var(--gray-500);
-}
-
-.btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  background: var(--white);
-  color: var(--black);
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--gray-200);
-  transform: translateY(-1px);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  margin-top: var(--space-4);
 }
 
 .loading-state {
@@ -624,8 +600,8 @@ const handleSubmit = async () => {
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top-color: currentColor;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -641,25 +617,30 @@ const handleSubmit = async () => {
 }
 
 @media (max-width: 768px) {
+  .profile-edit-page {
+    padding-top: 80px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 
-  .skill-cards {
+  .photo-upload {
     flex-direction: column;
-  }
-
-  .skill-card {
-    min-width: unset;
+    text-align: center;
   }
 
   .form-actions {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
   
-  .btn-primary, .btn-secondary {
+  .btn {
     width: 100%;
-    justify-content: center;
+  }
+
+  .form-section {
+    padding: var(--space-6);
   }
 }
 </style>
