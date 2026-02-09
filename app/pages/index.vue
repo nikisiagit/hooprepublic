@@ -1,10 +1,10 @@
 <template>
   <div class="home">
     <!-- Hero Section -->
-    <section class="hero illustration-bg">
+    <section class="hero illustration-bg aura-orange">
       <div class="container hero-content">
         <div class="hero-text animate-fade-in">
-          <span class="badge badge-primary">🏀 London's Basketball Community</span>
+          <span class="badge badge-primary glow-badge">🏀 London's Basketball Community</span>
           <h1>Find Your Court.<br/>Play Your Game.</h1>
           <p class="hero-description">
             Connect with basketball players across London. Book courts, join open games, 
@@ -28,7 +28,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features">
+    <section class="features aura-orange">
       <div class="container">
         <div class="section-header">
           <h2>How It Works</h2>
@@ -120,9 +120,10 @@
 
 .hero-text .badge {
   margin-bottom: var(--space-6);
-  background: var(--gray-100);
-  color: var(--black);
-  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--orange-600);
+  border: 1px solid var(--orange-200);
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.1);
 }
 
 .hero-text h1 {
@@ -224,6 +225,21 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--orange-900);
+  box-shadow: 0 0 40px rgba(249, 115, 22, 0.1);
+}
+
+.cta-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(249, 115, 22, 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .cta-content h2 {

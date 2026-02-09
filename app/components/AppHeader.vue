@@ -1,7 +1,7 @@
 <template>
   <header class="header glass">
     <div class="container header-content">
-      <NuxtLink to="/" class="logo">
+      <NuxtLink to="/" class="logo glow-logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="28" height="28" class="logo-icon">
           <circle cx="256" cy="256" r="240" fill="#f97316"/>
           <path d="M256 16C123.45 16 16 123.45 16 256s107.45 240 240 240 240-107.45 240-240S388.55 16 256 16z" fill="none" stroke="#fff" stroke-width="24"/>
@@ -163,6 +163,7 @@ const vClickOutside = {
 
 .logo-icon {
   margin-right: var(--space-2);
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.3));
 }
 
 .logo-text {
@@ -230,7 +231,7 @@ const vClickOutside = {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+  background: linear-gradient(135deg, var(--orange-400), var(--orange-600));
   display: flex;
   align-items: center;
   justify-content: center;
