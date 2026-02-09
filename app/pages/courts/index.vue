@@ -122,9 +122,9 @@
               
               <div class="court-content">
                 <div class="court-header">
-                  <div>
+                  <div class="court-main-info">
                     <span class="location-top">{{ court.borough || 'London' }}</span>
-                    <h3>{{ court.name }}</h3>
+                    <h3 class="court-title">{{ court.name }}</h3>
                     <p class="court-address">{{ court.address }}</p>
                   </div>
                   <div v-if="court.avg_rating" class="court-rating">
@@ -149,7 +149,8 @@
                     <span class="subtext">Public Access</span>
                   </div>
                   <div v-if="(court.upcoming_game_dates_count || 0) > 0" class="game-availability">
-                    Available games on {{ court.upcoming_game_dates_count }} dates
+                    <span class="pulse-icon"></span>
+                    {{ court.upcoming_game_dates_count }} live dates
                   </div>
                 </div>
               </div>
@@ -357,31 +358,58 @@ onMounted(() => {
 
 .court-image {
   position: relative;
-  height: 220px;
+  height: 180px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  margin: var(--space-3);
+  margin: var(--space-2);
+  background: var(--gray-50);
 }
 
 .court-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.court-card:hover .court-image img {
+  transform: scale(1.05);
+}
+
+.court-content {
+  padding: 0 var(--space-4) var(--space-4);
 }
 
 .court-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
   margin-bottom: var(--space-3);
 }
 
+.court-main-info {
+  flex: 1;
+}
+
 .location-top {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--gray-500);
+  display: inline-block;
+  font-size: 0.6875rem;
+  color: var(--orange-600);
+  background: var(--orange-50);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: var(--space-2);
-  line-height: normal;
+}
+
+.court-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 2px;
 }
 
 .court-address {
@@ -411,38 +439,52 @@ onMounted(() => {
 .court-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--gray-100);
-}
-
-.price-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.price {
-  font-size: 1.125rem;
-  font-weight: 800;
-  color: var(--black);
-}
-
-.subtext {
-  font-size: 0.75rem;
-  color: var(--gray-500);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--gray-50);
 }
 
 .game-availability {
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--black);
+  font-weight: 700;
+  color: var(--orange-600);
   padding: var(--space-1) var(--space-3);
-  background: var(--gray-100);
+  background: var(--orange-50);
   border-radius: var(--radius-full);
-  text-align: right;
-  max-width: 50%;
-  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pulse-icon {
+  width: 6px;
+  height: 6px;
+  background: var(--orange-500);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}
+
+.court-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--gray-50);
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.8125rem;
+}
+
+.rating-stars {
+  color: #FBBF24;
 }
 
 /* Mobile Floating Toggle */
@@ -493,6 +535,25 @@ onMounted(() => {
 
   .courts-section.map-active .listings-column {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .courts-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .court-image {
+    height: 160px;
+  }
+
+  .court-title {
+    font-size: 1.125rem;
+  }
+
+  .game-availability {
+    font-size: 0.6875rem;
   }
 }
 
@@ -549,20 +610,25 @@ onMounted(() => {
   padding: 0 var(--space-4);
   background: white;
   border: 1px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-fast);
-  height: 48px;
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+  height: 52px;
   min-width: 300px;
 }
 
 .search-input-wrapper:focus-within {
-  border-color: var(--black);
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+  border-color: var(--orange-500);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
 }
 
 .search-input-wrapper svg {
   color: var(--gray-400);
   flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.search-input-wrapper:focus-within svg {
+  color: var(--orange-500);
 }
 
 .search-input {
@@ -571,6 +637,7 @@ onMounted(() => {
   border: none;
   background: none;
   font-size: 0.9375rem;
+  font-weight: 500;
   height: 100%;
 }
 
