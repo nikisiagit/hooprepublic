@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "dayjs": "^1.11.19",
     "leaflet": "^1.9.4",
     "nanoid": "^5.1.6",
     "nuxt": "^4.3.1",
