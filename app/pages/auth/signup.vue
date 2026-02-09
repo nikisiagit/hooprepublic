@@ -112,8 +112,13 @@
     </div>
 
     <div class="auth-visual">
-      <video autoplay muted loop playsinline class="bg-video">
-        <source src="https://videos.pexels.com/video-files/1852085/1852085-hd_1920_1080_24fps.mp4" type="video/mp4">
+      <!-- 
+        To use a video background: 
+        1. Place your MP4 file in `public/background-video.mp4`
+        2. The poster image below will show while loading or if no video is present.
+      -->
+      <video autoplay muted loop playsinline class="bg-video" poster="/auth-bg.png">
+        <source src="/background-video.mp4" type="video/mp4">
       </video>
       <div class="visual-overlay"></div>
       
