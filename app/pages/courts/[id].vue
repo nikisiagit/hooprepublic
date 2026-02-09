@@ -1,8 +1,8 @@
 <template>
   <div v-if="court" class="court-detail-page">
-    <!-- Hero Section with Image Gallery -->
-    <section class="court-hero">
-      <div class="court-hero-gallery">
+    <!-- Hero Section with Background / Gallery -->
+    <section class="court-hero" :class="{ 'has-placeholder': !court.image_url && (!court.images || court.images.length === 0) }">
+      <div v-if="court.image_url || (court.images && court.images.length > 0)" class="court-hero-gallery">
         <div class="main-image">
           <img :src="primaryImage" :alt="court.name" />
         </div>
@@ -12,6 +12,9 @@
           </div>
         </div>
       </div>
+      <div v-else class="hero-bg-placeholder" :style="{ backgroundImage: `url('/court-placeholder.png')` }">
+        <div class="hero-overlay"></div>
+      </div>
       
       <div class="container court-hero-content">
         <div class="court-main-header">
@@ -20,19 +23,26 @@
             <span class="status-badge" v-if="court.status === 'approved'">Available Now</span>
           </div>
           <h1>{{ court.name }}</h1>
-          <p class="court-address-large">📍 {{ court.address }}, {{ court.postcode }}</p>
+          <div class="address-copy-row">
+            <p class="court-address-large">📍 {{ court.address }}, {{ court.postcode }}</p>
+            <button @click="copyAddress" class="btn-copy">
+              {{ copied ? '✅ Copied' : '📋 Copy' }}
+            </button>
+          </div>
         </div>
 
         <div class="court-quick-actions">
           <div class="rating-box" v-if="court.avg_rating">
-            <span class="stars">★★★★★</span>
+            <div class="stars">
+              <span v-for="i in 5" :key="i" class="star" :class="{ active: i <= Math.round(court.avg_rating) }">★</span>
+            </div>
             <span class="rating-val">{{ court.avg_rating }} ({{ court.review_count }} reviews)</span>
           </div>
           <div class="action-buttons">
             <NuxtLink :to="`/games/create?courtId=${court.id}`" class="btn btn-primary btn-lg glow-orange">
               🏀 Host a Game
             </NuxtLink>
-            <button @click="scrollToReviews" class="btn btn-secondary btn-lg">
+            <button @click="scrollToReviewForm" class="btn btn-secondary btn-lg">
               💬 Leave a Review
             </button>
           </div>
@@ -89,7 +99,32 @@
 
         <!-- Reviews Section -->
         <section class="reviews-section" id="reviews">
-          <h2>Community Reviews</h2>
+          <div class="section-header-row">
+            <h2>Community Reviews</h2>
+            <button v-if="!showReviewForm" @click="showReviewForm = true" class="btn btn-outline btn-sm">Add Review</button>
+          </div>
+
+          <!-- Review Form -->
+          <div v-if="showReviewForm" class="review-form-card card aura-orange" id="review-form">
+            <h3>Share your experience</h3>
+            <p>Help other hoopers find the best courts.</p>
+            
+            <form @submit.prevent="submitReview">
+              <div class="rating-input">
+                <span v-for="i in 5" :key="i" class="star-btn" :class="{ active: i <= reviewForm.rating }" @click="reviewForm.rating = i">★</span>
+              </div>
+              
+              <textarea v-model="reviewForm.comment" placeholder="What did you like? How's the surface? Is it busy?" rows="3" required></textarea>
+              
+              <div class="form-actions">
+                <button type="button" @click="showReviewForm = false" class="btn btn-secondary btn-sm">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm" :disabled="submittingReview">
+                  {{ submittingReview ? 'Posting...' : 'Post Review' }}
+                </button>
+              </div>
+            </form>
+          </div>
+
           <div v-if="court.reviews && court.reviews.length > 0" class="reviews-list">
             <div v-for="review in court.reviews" :key="review.id" class="review-card">
               <div class="review-user">
@@ -98,7 +133,9 @@
                   <span class="name">{{ review.user_name }}</span>
                   <span class="date">{{ formatDate(review.created_at) }}</span>
                 </div>
-                <div class="stars">★ {{ review.rating }}</div>
+                <div class="stars">
+                  <span v-for="i in 5" :key="i" class="star-mini" :class="{ active: i <= review.rating }">★</span>
+                </div>
               </div>
               <p class="comment">{{ review.comment }}</p>
             </div>
@@ -151,10 +188,18 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+const { user } = useUser()
 const route = useRoute()
 const id = route.params.id as string
 const court = ref<any>(null)
 const loading = ref(true)
+const copied = ref(false)
+const showReviewForm = ref(false)
+const submittingReview = ref(false)
+const reviewForm = reactive({
+  rating: 5,
+  comment: ''
+})
 
 const fetchCourt = async () => {
   loading.value = true
@@ -178,8 +223,47 @@ const formatDate = (date: string, format = 'MMMM D, YYYY') => {
   return dayjs(date).format(format)
 }
 
-const scrollToReviews = () => {
-  document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })
+const copyAddress = () => {
+  const fullAddress = `${court.value.address}, ${court.value.postcode}`
+  navigator.clipboard.writeText(fullAddress)
+  copied.value = true
+  setTimeout(() => copied.value = false, 2000)
+}
+
+const scrollToReviewForm = () => {
+  showReviewForm.value = true
+  setTimeout(() => {
+    document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth' })
+  }, 100)
+}
+
+const submitReview = async () => {
+  if (!user.value) {
+    return navigateTo('/auth/signin?redirect=' + route.fullPath)
+  }
+
+  submittingReview.value = true
+  try {
+    await $fetch('/api/reviews', {
+      method: 'POST',
+      body: {
+        courtId: court.value.id,
+        userId: user.value.id,
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
+      }
+    } as any)
+    
+    // Refresh court data
+    await fetchCourt()
+    showReviewForm.value = false
+    reviewForm.comment = ''
+    reviewForm.rating = 5
+  } catch (err) {
+    console.error('Failed to submit review:', err)
+  } finally {
+    submittingReview.value = false
+  }
 }
 
 const openInGoogleMaps = () => {
@@ -200,7 +284,29 @@ onMounted(() => {
 
 .court-hero {
   position: relative;
-  padding-bottom: var(--space-12);
+  min-height: 400px;
+}
+
+.court-hero.has-placeholder {
+  min-height: 500px;
+}
+
+.hero-bg-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+  z-index: 1;
 }
 
 .court-hero-gallery {
@@ -208,7 +314,7 @@ onMounted(() => {
   grid-template-columns: 1fr 300px;
   height: 500px;
   gap: var(--space-2);
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-4);
   background: var(--gray-50);
 }
 
@@ -239,10 +345,22 @@ onMounted(() => {
 }
 
 .court-hero-content {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: var(--space-8);
+  padding: var(--space-12) var(--space-4);
+}
+
+.has-placeholder .court-hero-content {
+  padding-bottom: var(--space-12);
+}
+
+.has-placeholder .court-main-header h1,
+.has-placeholder .court-address-large {
+  color: white;
 }
 
 .court-badge-row {
@@ -270,10 +388,37 @@ onMounted(() => {
   font-size: 0.75rem;
 }
 
+.address-copy-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+}
+
 .court-address-large {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--gray-600);
-  margin-top: var(--space-2);
+}
+
+.btn-copy {
+  background: var(--gray-100);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-copy:hover {
+  background: var(--gray-200);
+}
+
+.has-placeholder .btn-copy {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  backdrop-filter: blur(4px);
 }
 
 .court-quick-actions {
@@ -295,14 +440,22 @@ onMounted(() => {
   justify-content: flex-end;
 }
 
-.rating-box .stars {
+.rating-box .star {
+  color: var(--gray-300);
+  font-size: 1.25rem;
+}
+
+.rating-box .star.active {
   color: #FBBF24;
-  letter-spacing: 2px;
 }
 
 .rating-val {
   font-weight: 700;
   color: var(--gray-900);
+}
+
+.has-placeholder .rating-val {
+  color: white;
 }
 
 /* Content Grid */
@@ -386,8 +539,8 @@ h2 {
 }
 
 .map-container {
-  height: 240px;
-  border-radius: var(--radius-lg);
+  height: 320px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   margin-bottom: var(--space-4);
   border: 1px solid var(--gray-200);
@@ -561,7 +714,65 @@ h2 {
 
 .review-card .comment {
   color: var(--gray-700);
-  line-height: 1.5;
+  line-height: 1.6;
+  font-size: 1.0625rem;
+}
+
+.star-mini, .star-btn {
+  color: var(--gray-200);
+  font-size: 1rem;
+}
+
+.star-mini.active, .star-btn.active {
+  color: #FBBF24;
+}
+
+.review-form-card {
+  margin-bottom: var(--space-10);
+  padding: var(--space-6);
+  border: 1px solid var(--orange-100);
+}
+
+.review-form-card h3 {
+  margin-bottom: 2px;
+}
+
+.review-form-card p {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  margin-bottom: var(--space-6);
+}
+
+.rating-input {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.star-btn {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+.review-form-card textarea {
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-family: inherit;
+  margin-bottom: var(--space-4);
+  resize: vertical;
+}
+
+.review-form-card .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
 }
 
 /* States */
