@@ -13,10 +13,10 @@
           
           <div class="hero-cta">
             <NuxtLink to="/courts" class="btn btn-primary btn-lg">
-              Find Courts
+              Courts
             </NuxtLink>
             <NuxtLink to="/games" class="btn btn-secondary btn-lg">
-              View Open Games
+              Games
             </NuxtLink>
           </div>
         </div>

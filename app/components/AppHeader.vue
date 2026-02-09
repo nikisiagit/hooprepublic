@@ -14,8 +14,8 @@
       </NuxtLink>
 
       <nav class="nav">
-        <NuxtLink to="/courts" class="nav-link">Find Courts</NuxtLink>
-        <NuxtLink to="/games" class="nav-link">Open Games</NuxtLink>
+        <NuxtLink to="/courts" class="nav-link">Courts</NuxtLink>
+        <NuxtLink to="/games" class="nav-link">Games</NuxtLink>
         <NuxtLink v-if="user?.role === 'admin'" to="/admin/courts" class="nav-link nav-link-admin">Admin</NuxtLink>
       </nav>
 
@@ -61,8 +61,8 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" :class="{ open: mobileMenuOpen }">
       <nav class="mobile-nav">
-        <NuxtLink to="/courts" class="mobile-nav-link" @click="closeMobileMenu">Find Courts</NuxtLink>
-        <NuxtLink to="/games" class="mobile-nav-link" @click="closeMobileMenu">Open Games</NuxtLink>
+        <NuxtLink to="/courts" class="mobile-nav-link" @click="closeMobileMenu">Courts</NuxtLink>
+        <NuxtLink to="/games" class="mobile-nav-link" @click="closeMobileMenu">Games</NuxtLink>
         <template v-if="user">
           <NuxtLink to="/profile" class="mobile-nav-link" @click="closeMobileMenu">My Profile</NuxtLink>
           <NuxtLink v-if="user.role === 'admin'" to="/admin/courts" class="mobile-nav-link" @click="closeMobileMenu">Admin</NuxtLink>
