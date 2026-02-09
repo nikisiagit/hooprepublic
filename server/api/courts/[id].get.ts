@@ -52,12 +52,26 @@ export default defineEventHandler(async (event) => {
         LIMIT 20
       `).bind(id).all()
 
+            // Get upcoming games
+            const { results: games } = await db.prepare(`
+        SELECT 
+          b.id, b.title, b.booking_date, b.start_time, b.end_time, b.price, b.max_players,
+          (SELECT COUNT(*) FROM booking_participants bp WHERE bp.booking_id = b.id AND bp.status = 'joined') as current_players,
+          u.name as creator_name, u.avatar_url as creator_avatar
+        FROM bookings b
+        JOIN users u ON b.user_id = u.id
+        WHERE b.court_id = ? AND b.booking_date >= date('now') AND b.status = 'confirmed'
+        ORDER BY b.booking_date ASC, b.start_time ASC
+        LIMIT 10
+      `).bind(id).all()
+
             return {
                 ...court,
                 avg_rating: court.avg_rating ? Math.round(court.avg_rating * 10) / 10 : null,
                 tags,
                 images,
-                reviews
+                reviews,
+                upcoming_games: games
             }
         }
 

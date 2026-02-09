@@ -111,7 +111,7 @@
             >
               <div class="court-image">
                 <img 
-                  :src="court.image_url || '/placeholder-court.svg'" 
+                  :src="court.image_url || '/court-placeholder.png'" 
                   :alt="court.name"
                   loading="lazy"
                 />
@@ -134,8 +134,9 @@
                 </div>
 
                 <div class="court-features">
+                  <span class="feature feature-free">🆓 Free</span>
                   <span 
-                    v-for="tag in court.tags?.slice(0, 3)" 
+                    v-for="tag in court.tags?.slice(0, 2)" 
                     :key="tag.id" 
                     class="feature"
                   >
@@ -145,7 +146,6 @@
 
                 <div class="court-footer">
                   <div class="price-info">
-                    <span class="price">Free</span>
                     <span class="subtext">Public Access</span>
                   </div>
                   <div v-if="(court.upcoming_game_dates_count || 0) > 0" class="game-availability">
@@ -434,6 +434,13 @@ onMounted(() => {
   font-size: 0.75rem;
   color: var(--gray-700);
   white-space: nowrap;
+  font-weight: 600;
+}
+
+.feature-free {
+  background: var(--orange-50);
+  border-color: var(--orange-100);
+  color: var(--orange-700);
 }
 
 .court-footer {
