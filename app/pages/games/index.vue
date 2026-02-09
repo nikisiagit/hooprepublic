@@ -1,16 +1,32 @@
 <template>
   <div class="games-page">
     <section class="page-header">
-      <div class="container">
-        <h1>Find a Game</h1>
-        <p>Join pickup games and meet other players</p>
+      <div class="container header-inner">
+        <div class="header-text">
+          <h1>Games</h1>
+          <p>Join pickup games in London</p>
+        </div>
+        
+        <!-- Next Available Game Prompt -->
+        <div v-if="nextAvailableGame" class="next-game-prompt aura-orange">
+          <div class="prompt-content">
+            <span class="prompt-label">Next Available Game</span>
+            <div class="prompt-info">
+              <span class="prompt-time">🕒 {{ formatTime(nextAvailableGame.start_time) }}</span>
+              <span class="prompt-court">{{ nextAvailableGame.court_name }}</span>
+            </div>
+          </div>
+          <button @click="scrollToGame(nextAvailableGame.id)" class="btn btn-primary btn-sm">
+            Take me there
+          </button>
+        </div>
       </div>
     </section>
 
     <!-- Filters -->
-    <section class="filters-section" v-if="games.length > 0">
+    <section class="filters-section" v-if="upcomingDays.length > 0">
       <div class="container">
-        <div class="filters-bar glass">
+        <div class="filters-container">
           <div class="date-filters">
             <button 
               v-for="day in upcomingDays" 
@@ -66,6 +82,7 @@
           <div 
             v-for="game in filteredGames" 
             :key="game.id" 
+            :id="`game-${game.id}`"
             class="game-card card"
           >
             <div class="game-time">
@@ -174,6 +191,34 @@ const filteredGames = computed(() => {
   return games.value.filter(game => game.booking_date === selectedDate.value)
 })
 
+const nextAvailableGame = computed(() => {
+  if (games.value.length === 0) return null
+  // Games are already sorted by date and time from the API usually, 
+  // but let's just take the first one that hasn't started yet today or in the future
+  const now = new Date()
+  const today = now.toISOString().split('T')[0]
+  const currentTime = now.getHours() * 60 + now.getMinutes()
+
+  return games.value.find(game => {
+    if (game.booking_date > today) return true
+    if (game.booking_date === today) {
+      const [h, m] = game.start_time.split(':').map(Number)
+      const gameTime = (h || 0) * 60 + (m || 0)
+      return gameTime > currentTime
+    }
+    return false
+  }) || games.value[0]
+})
+
+const scrollToGame = (id: string) => {
+  const el = document.getElementById(`game-${id}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    el.classList.add('highlight-pulse')
+    setTimeout(() => el.classList.remove('highlight-pulse'), 2000)
+  }
+}
+
 const fetchGames = async () => {
   loading.value = true
   try {
@@ -239,59 +284,111 @@ const getInitials = (name: string) => {
 }
 
 .page-header {
-  padding: var(--space-16) 0 var(--space-12);
+  padding: var(--space-8) 0;
   background: var(--white);
-  text-align: center;
   border-bottom: 1px solid var(--gray-100);
 }
 
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
+}
+
 .page-header h1 {
-  font-size: 3rem;
-  margin-bottom: var(--space-2);
+  font-size: 2.5rem;
+  margin-bottom: 2px;
   letter-spacing: -0.02em;
 }
 
 .page-header p {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--gray-500);
+}
+
+/* Next Game Prompt */
+.next-game-prompt {
+  background: var(--gray-950);
+  border: 1px solid var(--orange-900);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  color: white;
+}
+
+.prompt-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--orange-500);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.prompt-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.prompt-time {
+  white-space: nowrap;
+}
+
+.prompt-court {
+  color: var(--gray-400);
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Filters */
 .filters-section {
-  padding: var(--space-6) 0;
+  padding: var(--space-4) 0;
   position: sticky;
   top: 72px;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--gray-100);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
 }
 
-.filters-bar {
-  padding: var(--space-4);
-  border-radius: var(--radius-xl);
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+.filters-container {
+  display: flex;
+  justify-content: center;
 }
 
 .date-filters {
   display: flex;
-  gap: var(--space-2);
-  overflow-x: auto;
-  padding-bottom: var(--space-2);
+  gap: var(--space-1);
+  background: var(--gray-50);
+  padding: 4px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--gray-100);
 }
 
 .date-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-3) var(--space-5);
-  background: var(--white);
-  border: 1.5px solid var(--gray-200);
+  padding: 6px 16px;
+  background: transparent;
+  border: none;
   border-radius: var(--radius-lg);
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
   flex-shrink: 0;
-  min-width: 80px;
+  min-width: 70px;
 }
 
 .date-btn:hover {
@@ -331,14 +428,14 @@ const getInitials = (name: string) => {
 
 .game-card {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  gap: var(--space-6);
+  grid-template-columns: 100px 1fr auto auto;
+  gap: var(--space-4);
   align-items: center;
-  padding: var(--space-5);
+  padding: var(--space-4) var(--space-6);
   background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-xl);
-  transition: all var(--transition-fast);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-2xl);
+  transition: all var(--transition-base);
 }
 
 .game-card:hover {
@@ -450,11 +547,21 @@ const getInitials = (name: string) => {
 }
 
 .game-actions .btn:disabled {
-  background: var(--gray-200);
-  color: var(--gray-500);
+  background: var(--gray-100);
+  color: var(--gray-400);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.highlight-pulse {
+  animation: highlight-pulse 2s ease-out;
+}
+
+@keyframes highlight-pulse {
+  0% { border-color: var(--orange-500); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+  70% { border-color: var(--orange-500); box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+  100% { border-color: var(--gray-100); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
 }
 
 /* Skeleton */
