@@ -112,6 +112,11 @@
     </div>
 
     <div class="auth-visual">
+      <video autoplay muted loop playsinline class="bg-video">
+        <source src="https://videos.pexels.com/video-files/1852085/1852085-hd_1920_1080_24fps.mp4" type="video/mp4">
+      </video>
+      <div class="visual-overlay"></div>
+      
       <div class="visual-content">
         <h2>Find your game</h2>
         <p>Connect with players, discover courts, and never miss a pickup game in London.</p>
@@ -451,8 +456,31 @@ const handleGoogleError = () => {
   overflow: hidden;
 }
 
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.visual-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+
 .visual-content {
   position: relative;
+  z-index: 3;
   color: white;
   max-width: 400px;
   text-align: center;
