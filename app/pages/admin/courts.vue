@@ -63,7 +63,7 @@
                 <td>
                   <div class="court-name-cell">
                     <img 
-                      :src="court.image_url || '/placeholder-court.svg'" 
+                      :src="court.image_url || '/court-placeholder.png'" 
                       :alt="court.name"
                       class="court-thumb"
                     />

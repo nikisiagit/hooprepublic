@@ -48,7 +48,7 @@
                 @click="form.courtId = court.id"
               >
                 <div class="court-option-image">
-                   <img :src="court.image_url || '/placeholder-court.svg'" :alt="court.name" />
+                   <img :src="court.image_url || '/court-placeholder.png'" :alt="court.name" />
                 </div>
                 <div class="court-option-details">
                   <h4>{{ court.name }}</h4>
