@@ -118,7 +118,7 @@
         2. The poster image below will show while loading or if no video is present.
       -->
       <video autoplay muted loop playsinline class="bg-video" poster="/auth-bg.png">
-        <!-- Add a working video source here later, e.g. <source src="/background-video.mp4" type="video/mp4"> -->
+        <source src="/background-video.mp4" type="video/mp4">
       </video>
       <div class="visual-overlay"></div>
       
